@@ -106,16 +106,17 @@ class Raffle extends Model implements \OwenIt\Auditing\Contracts\Auditable
      * @var array
      */
     protected $casts = [
-        'id'                   => 'integer',
-        'lottery_id'           => 'integer',
-        'is_available'         => 'boolean',
-        'raffle_date'          => 'date',
+        'id' => 'integer',
+        'lottery_id' => 'integer',
+        'is_available' => 'boolean',
+        'raffle_date' => 'date',
         'result_registered_at' => 'date',
-        'created_by'           => 'integer',
-        'data'                 => 'json',
+        'created_by' => 'integer',
+        'data' => 'json',
     ];
 
     public $appends = [
+        'is_checked',
         'qty_tickets',
         'winner_tickets',
     ];
@@ -131,9 +132,9 @@ class Raffle extends Model implements \OwenIt\Auditing\Contracts\Auditable
     public static function findByLotteryDateTime(int $lotteryId, string $date, string $time): ?self
     {
         return self::where('lottery_id', $lotteryId)
-                    ->where('raffle_date', $date)
-                    ->where('raffle_time', $time)
-                    ->first();
+            ->where('raffle_date', $date)
+            ->where('raffle_time', $time)
+            ->first();
     }
 
 
@@ -158,7 +159,7 @@ class Raffle extends Model implements \OwenIt\Auditing\Contracts\Auditable
 
     public function scopePending($query)
     {
-        return $query->where('result','');
+        return $query->where('result', '');
     }
 
     public function scopeByLottery($query, int $lotteryId)
@@ -205,24 +206,31 @@ class Raffle extends Model implements \OwenIt\Auditing\Contracts\Auditable
 
     protected function setRaffleTimeAttribute($value)
     {
-        $this->attributes['raffle_time'] = strtoupper(substr($value,0,20));
+        $this->attributes['raffle_time'] = strtoupper(substr($value, 0, 20));
     }
 
     protected function setResultAttribute($value)
     {
-        $this->attributes['result'] = strtoupper(substr($value,0,20));
+        $this->attributes['result'] = strtoupper(substr($value, 0, 20));
     }
 
     //-------------
     // Attributes
     //-------------
+    public function getIsCheckedAttribute(): string
+    {
+        return $this->result !== '' && $this->result !== null
+            ? 'Yes'
+            : 'No';
+    }
+
     public function getWinnerTicketsAttribute(): int
     {
         return Ticket::whereHas('ticketDetails', function ($query) {
             $query->where('raffle_id', $this->id)
                 ->where('won', true);
         })
-        ->count();
+            ->count();
     }
 
     public function getQtyTicketsAttribute(): int

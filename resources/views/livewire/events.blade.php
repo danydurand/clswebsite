@@ -25,6 +25,7 @@
                 <th class="px-4 py-2 text-center">Bet Start Time</th>
                 <th class="px-4 py-2 text-center">Bet End Time</th>
                 <th class="px-4 py-2 text-center">Locked?</th>
+                <th class="px-4 py-2 text-center">Checked?</th>
             </tr>
         </thead>
         <tbody>
@@ -37,7 +38,20 @@
                     <td class="px-4 py-2 text-center">{{ $event->start_time }}</td>
                     <td class="px-4 py-2 text-center">{{ $event->bet_start_time }}</td>
                     <td class="px-4 py-2 text-center">{{ $event->bet_end_time }}</td>
-                    <td class="px-4 py-2 text-center">{{ $event->is_locked ? 'Yes' : 'No' }}</td>
+                    <td class="px-4 py-2 text-center">
+                        @if ($event->is_locked)
+                            <flux:badge icon="lock-closed" color="red">Yes</flux:badge>
+                        @else
+                            <flux:badge icon="lock-open" color="green">No</flux:badge>
+                        @endif
+                    </td>
+                    <td class="px-4 py-2 text-center">
+                        @if ($event->is_checked)
+                            <flux:badge icon="check-circle" color="green">Yes</flux:badge>
+                        @else
+                            <flux:badge icon="x-circle" color="red">No</flux:badge>
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </tbody>

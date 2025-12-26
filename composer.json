@@ -10,10 +10,12 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
+        "calebporzio/sushi": "^2.5",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "livewire/flux": "^2.9.0",
+        "livewire/flux-pro": "^2.10",
         "livewire/volt": "^1.7.0",
         "owen-it/laravel-auditing": "^14.0",
         "staudenmeir/eloquent-has-many-deep": "^1.21"
@@ -38,7 +40,11 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "app/Helpers/custom.php",
+            "app/Helpers/client.php"
+        ]
     },
     "scripts": {
         "setup": [
@@ -91,5 +97,11 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": {
+        "flux-pro": {
+            "type": "composer",
+            "url": "https://composer.fluxui.dev"
+        }
+    }
 }
