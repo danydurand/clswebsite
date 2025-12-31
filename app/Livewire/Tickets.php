@@ -16,14 +16,7 @@ class Tickets extends Component
     public $ticket;
     public $userMessage = '';
     public $colorMessage = 'red';
-    public $ticket_id;
-    public $ticket_code;
-    public $ticket_created_at;
-    public $ticket_status;
-    public $ticket_status_color;
-    public $ticket_stake_amount;
-    public $ticket_won;
-    public $ticket_prize;
+    public $ticketDetails = [];
 
     public function sort($column)
     {
@@ -42,21 +35,28 @@ class Tickets extends Component
         return Ticket::query()
             ->byCustomer($user->customer_id)
             ->tap(fn($query) => $this->sortBy ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
-            ->paginate(5);
+            ->paginate(10);
+    }
+
+    public function howToPlay($id)
+    {
+        $this->ticket = Ticket::find($id);
+        return redirect()->route('tickets.howtoplay');
+    }
+
+    public function createTicket()
+    {
+        return redirect()->route('tickets.create');
     }
 
     public function viewTicket($id)
     {
-        // info('Viewing ticket: ' . $id);
-        $this->ticket = Ticket::findOrFail($id);
-        $this->ticket_id = $id;
-        $this->ticket_code = $this->ticket->code;
-        $this->ticket_created_at = $this->ticket->created_at->format('Y-m-d H:i:s');
-        $this->ticket_status = $this->ticket->status->getLabel();
-        $this->ticket_status_color = $this->ticket->status->getColor();
-        $this->ticket_stake_amount = $this->ticket->stake_amount;
-        $this->ticket_won = $this->ticket->won ? 'Yes' : 'No';
-        $this->ticket_prize = $this->ticket->prize;
+        return redirect()->route('tickets.view', $id);
+    }
+
+    public function editTicket($id)
+    {
+        return redirect()->route('tickets.edit', $id);
     }
 
     public function render()

@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Flux\Flux;
 use App\Models\Game;
+use App\Helpers\Flash;
 use App\Models\Raffle;
 use App\Models\Ticket;
 use App\Models\Lottery;
@@ -18,6 +19,7 @@ use App\Domain\Ticket\PaymentStatusEnum;
 
 class CreateTicket extends Component
 {
+    public $ticket;
     public $lottery_id;
     public $raffle_id;
     public $game_id;
@@ -25,12 +27,14 @@ class CreateTicket extends Component
     public $stake_amount;
     public $userMessage = '';
     public $colorMessage = 'red';
-    public $ticketDetails = [];
+    // public $ticketDetails = [];
     public $sortBy = 'id';
     public $sortDirection = 'asc';
 
-    public function mount()
+    public function mount(?int $raffle_id = null)
     {
+        $this->raffle_id = $raffle_id;
+
         // Selecting the lotteries that has available raffles
         $lotteries = Lottery::whereHas('raffles', function ($query) {
             $query->where('is_available', true);
@@ -38,16 +42,6 @@ class CreateTicket extends Component
 
         $this->lottery_id = $lotteries->first()->id;
 
-    }
-
-    public function sort($column)
-    {
-        if ($this->sortBy === $column) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortBy = $column;
-            $this->sortDirection = 'asc';
-        }
     }
 
     public function updatedLotteryId($value)
@@ -86,110 +80,136 @@ class CreateTicket extends Component
     }
 
 
-    public function validateData(array $data): PResponse
-    {
-        $response = new PResponse();
-        $response->okay = false;
-        $response->qtyErrors = 1;
-        $response->setData('colorMessage', 'red');
+    // public function validateData(array $data): PResponse
+    // {
+    //     $response = new PResponse();
+    //     $response->okay = false;
+    //     $response->qtyErrors = 1;
+    //     $response->setData('colorMessage', 'red');
 
-        $bet = $data['sequence'];
-        $stake = $data['stake_amount'];
-        $raffle = $data['raffle_id'];
-        //-------------------------------------------
-        // The User must select a Raffle to play in
-        //-------------------------------------------
-        if (strlen($raffle) === 0) {
-            $response->userMessage = 'Choose a Raffle';
-            return $response;
-        }
-        //----------------------------------------------------------------
-        // We evaluate if the raffle field contains more than one raffle
-        //----------------------------------------------------------------
-        // $result = $this->evaluateRaffles($raffle, $qtyRaffles);
-        // if ($result['error']) {
-        //     $response->userMessage = $result['message'];
-        //     return $response;
-        // }
-        // $validRaffles = $result['valid_raffles'];
-        //------------------------------
-        // The User must provide a bet
-        //------------------------------
-        if (strlen($bet) <= 1) {
-            $response->userMessage = 'Type the Bet (at least to digits)';
-            return $response;
-        }
-        //---------------------------------------
-        // The User must provide a stake amount
-        //---------------------------------------
-        if (strlen($stake) === 0) {
-            $response->userMessage = 'Type the Stake Amount';
-            return $response;
-        }
-        //------------------------------------------------
-        // The stake amount must be in the allowed range
-        //------------------------------------------------
-        $min = sett('minimum-bet', 'float', 0.5);
-        $max = sett('maximum-bet', 'float', 600);
-        if (($stake < $min) || ($stake > $max)) {
-            $response->userMessage = "The Stake must be between: $min and $max";
-            return $response;
-        }
-        //------------------------------------------
-        // The bet must have a valid sale sequence
-        //------------------------------------------
-        $betParsed = TicketServices::parseBet($bet);
-        $betNumbers = [$betParsed['numbers']];
-        $betType = $betParsed['bet_type'];
-        $pick = $betParsed['pick'];
-        if ($betType === '/') {
-            $betNumbers = TicketServices::marriageCombinations($betParsed['numbers']);
-        }
-        //----------------------------------------------------------
-        // The SaleSequence indicates the real games to be played
-        //----------------------------------------------------------
-        $games = SaleSequence::where('pick', $pick)
-            ->where('char', $betType)
-            ->get();
-        //--------------------------------------------------------
-        // If there is no match, then is an invalid bet sequence
-        //--------------------------------------------------------
-        if ((count($games) === 0) || (!($games[0] instanceof SaleSequence))) {
-            info('Invalid bet sequence: ' . $bet);
-            $response->userMessage = 'Invalid Bet';
-            return $response;
-        }
-        //-------------------------------------------------------------------------------------
-        // Returns the real games to be played and the bet numbers clean without any modifier
-        //-------------------------------------------------------------------------------------
-        $response->okay = true;
-        $response->qtyErrors = 0;
-        $response->setData('colorMessage', 'green');
-        $response->setData('games', $games);
-        $response->setData('validRaffles', $raffle);
-        $response->setData('betNumbers', $betNumbers);
-        return $response;
-    }
+    //     $bet = $data['sequence'];
+    //     $stake = $data['stake_amount'];
+    //     $raffle = $data['raffle_id'];
+    //     //-------------------------------------------
+    //     // The User must select a Raffle to play in
+    //     //-------------------------------------------
+    //     if (strlen($raffle) === 0) {
+    //         $response->userMessage = 'Choose a Raffle';
+    //         return $response;
+    //     }
+    //     //----------------------------------------------------------------
+    //     // We evaluate if the raffle field contains more than one raffle
+    //     //----------------------------------------------------------------
+    //     // $result = $this->evaluateRaffles($raffle, $qtyRaffles);
+    //     // if ($result['error']) {
+    //     //     $response->userMessage = $result['message'];
+    //     //     return $response;
+    //     // }
+    //     // $validRaffles = $result['valid_raffles'];
+    //     //------------------------------
+    //     // The User must provide a bet
+    //     //------------------------------
+    //     if (strlen($bet) <= 1) {
+    //         $response->userMessage = 'Type the Bet (at least to digits)';
+    //         return $response;
+    //     }
+    //     //---------------------------------------
+    //     // The User must provide a stake amount
+    //     //---------------------------------------
+    //     if (strlen($stake) === 0) {
+    //         $response->userMessage = 'Type the Stake Amount';
+    //         return $response;
+    //     }
+    //     //------------------------------------------------
+    //     // The stake amount must be in the allowed range
+    //     //------------------------------------------------
+    //     $min = sett('minimum-bet', 'float', 0.5);
+    //     $max = sett('maximum-bet', 'float', 600);
+    //     if (($stake < $min) || ($stake > $max)) {
+    //         $response->userMessage = "The Stake must be between: $min and $max";
+    //         return $response;
+    //     }
+    //     //-----------------------
+    //     // The Game must exists 
+    //     //-----------------------
+    //     $game = Game::find($data['game_id']);
+    //     if (!($game instanceof Game)) {
+    //         $response->userMessage = "Invalid Game";
+    //         return $response;
+    //     }
+    //     //--------------------------
+    //     // The bet must be numeric 
+    //     //--------------------------
+    //     if (!is_numeric($bet)) {
+    //         $response->userMessage = 'The Bet must be numeric';
+    //         return $response;
+    //     }
+    //     //------------------------------------------------------------
+    //     // The bet number' digits count must match the selected game
+    //     //------------------------------------------------------------
+    //     $length = strlen($bet);
+    //     $gamePick = $game->pick;
+    //     if ($length != $gamePick) {
+    //         $response->userMessage = "Invalid Bet, you must provide $gamePick digits";
+    //         return $response;
+    //     }
+    //     //------------------------------------------
+    //     // The bet must have a valid sale sequence
+    //     //------------------------------------------
+    //     // $betParsed = TicketServices::parseBet($bet);
+    //     // $betNumbers = [$betParsed['numbers']];
+    //     // $betType = $betParsed['bet_type'];
+    //     // $pick = $betParsed['pick'];
+    //     // if ($betType === '/') {
+    //     //     $betNumbers = TicketServices::marriageCombinations($betParsed['numbers']);
+    //     // }
+    //     //----------------------------------------------------------
+    //     // The SaleSequence indicates the real games to be played
+    //     //----------------------------------------------------------
+    //     // $games = SaleSequence::where('pick', $pick)
+    //     //     ->where('char', $betType)
+    //     //     ->get();
+    //     //--------------------------------------------------------
+    //     // If there is no match, then is an invalid bet sequence
+    //     //--------------------------------------------------------
+    //     // if ((count($games) === 0) || (!($games[0] instanceof SaleSequence))) {
+    //     //     info('Invalid bet sequence: ' . $bet);
+    //     //     $response->userMessage = 'Invalid Bet';
+    //     //     return $response;
+    //     // }
+    //     //-------------------------------------------------------------------------------------
+    //     // Returns the real games to be played and the bet numbers clean without any modifier
+    //     //-------------------------------------------------------------------------------------
+    //     $response->okay = true;
+    //     $response->qtyErrors = 0;
+    //     $response->setData('colorMessage', 'green');
+    //     $response->setData('games', $game->id);
+    //     $response->setData('validRaffles', $raffle);
+    //     $response->setData('betNumbers', $bet);
+    //     return $response;
+    // }
 
 
     public function save(?int $ticketId = null) //: PResponse
     {
 
+        $data['game_id'] = $this->game_id;
         $data['sequence'] = $this->sequence;
         $data['stake_amount'] = $this->stake_amount;
         $data['raffle_id'] = $this->raffle_id;
 
-        $validation = $this->validateData($data);
+        $validation = TicketServices::validateData($data);
+        // $validation = $this->validateData($data);
         if (!$validation->okay) {
-            $this->userMessage = $validation->userMessage;
-            $this->colorMessage = 'red';
+            Flash::error($validation->userMessage);
             return;
         }
 
         // info('Validation: ' . $validation);
 
         $betNumbers = $validation->getData('betNumbers');
-        $game_id = $validation->getData('games')[0]['game_id'];
+        // $game_id = $validation->getData('games')[0]['game_id'];
+        $game_id = $validation->getData('game_id');
         $raffle_id = $validation->getData('validRaffles');
 
         $user = Auth::user();
@@ -202,7 +222,7 @@ class CreateTicket extends Component
             //----------------------
             // Creating the Ticket
             //----------------------
-            $ticket = Ticket::create([
+            $this->ticket = Ticket::create([
                 'customer_id' => $user->customer_id,
                 'stake_amount' => $this->stake_amount,
                 'payment_status' => PaymentStatusEnum::Pending->value,
@@ -215,18 +235,17 @@ class CreateTicket extends Component
                 'terminal_id' => null,
             ]);
             $this->userMessage = 'Ticket Created';
-            $this->colorMessage = 'green';
+            Flash::success($this->userMessage);
         } else {
-            $ticket = Ticket::find($ticketId);
-            info('Ticket: ' . $ticket);
-            if ($ticket->was_cancelled) {
-                $this->userMessage = 'Ticket Cancelled';
-                $this->colorMessage = 'red';
+            $this->ticket = Ticket::find($ticketId);
+            info('Ticket: ' . $this->ticket);
+            if ($this->ticket->was_cancelled) {
+                Flash::error('Ticket Cancelled');
                 return;
             }
         }
 
-        $previous = $ticket->ticketDetails()
+        $previous = $this->ticket->ticketDetails()
             ->where('raffle_id', $raffle_id)
             ->where('game_id', $game_id)
             ->where('sequence', $betNumbers)
@@ -235,8 +254,7 @@ class CreateTicket extends Component
             // Update the previously created record
             $previous->stake_amount += $this->stake_amount;
             $previous->save();
-            $this->userMessage = 'Bet Updated';
-            $this->colorMessage = 'green';
+            Flash::success('Bet Added');
         } else {
             //-----------------------------------------------------------------
             // Create a new record for each sequence (betNumbers is an array)
@@ -244,7 +262,7 @@ class CreateTicket extends Component
             $qtyBets = 0;
             for ($x = 0; $x < count($betNumbers); $x++) {
                 $sequence = $betNumbers[$x];
-                $ticket->ticketDetails()->create([
+                $this->ticket->ticketDetails()->create([
                     'raffle_id' => $raffle_id,
                     'game_id' => $game_id,
                     'sequence' => $sequence,
@@ -258,70 +276,23 @@ class CreateTicket extends Component
             $this->userMessage = $qtyBets > 1
                 ? $qtyBets . ' Bet(s) Added'
                 : 'Bet Added';
-            $this->colorMessage = 'green';
+
+            Flash::success($this->userMessage);
         }
 
-        $this->ticketDetails = $ticket->ticketDetails()->get();
+        // $this->ticketDetails = $ticket->ticketDetails()->get();
 
         // dd('Ticket Details: ' . print_r($this->ticketDetails, true));
 
-        /*
-        $gameIds = explode(',', $games[0]['game_id']);
-        $loop = count($gameIds);
-        for ($i = 0; $i < count($raffleCodes); $i++) {
-
-            $raffle = Raffle::findByCode($raffleCodes[$i]);
-
-            $raffleId = $raffle->id;
-            //-----------------------------
-            // Creating the Ticket Detail
-            //-----------------------------
-            for ($k = 0; $k < $loop; $k++) {
-                $previous = $ticket->ticketDetails()
-                    ->where('raffle_id', $raffleId)
-                    ->where('game_id', $gameIds[$k])
-                    ->where('sequence', $betNumbers)
-                    ->first();
-                if ($previous instanceof TicketDetail) {
-                    // Update the previously created record
-                    $previous->stake_amount += $this->stake;
-                    $previous->save();
-                    $response->userMessage = 'Bet Updated';
-                } else {
-                    //-----------------------------------------------------------------
-                    // Create a new record for each sequence (betNumbers is an array)
-                    //-----------------------------------------------------------------
-                    $qtyBets = 0;
-                    for ($x = 0; $x < count($betNumbers); $x++) {
-                        $sequence = $betNumbers[$x];
-                        $ticket->ticketDetails()->create([
-                            'raffle_id' => $raffleId,
-                            'game_id' => $gameIds[$k],
-                            'sequence' => $sequence,
-                            'stake_amount' => $this->stake,
-                            'won' => false,
-                            'prize_amount' => 0,
-                            'is_valid_bet' => true,
-                        ]);
-                        $qtyBets++;
-                    }
-                    $response->userMessage = $qtyBets > 1
-                        ? $qtyBets . ' Bet(s) Added'
-                        : 'Bet Added';
-                }
-            }
-        }
-        */
 
         $this->reset('game_id', 'sequence', 'stake_amount');
 
-        // Flux::modal('create-ticket')->close();
+        Flux::modal('create-ticket')->close();
 
-        session()->flash('success', 'Bet added successfully');
 
         // $this->dispatch('create-ticket');
 
-        // $this->redirectRoute('raffles', navigate: true);
+        $this->redirectRoute('tickets.edit', $this->ticket->id, navigate: true);
 
         // $response->setData('ticketId', $ticket->id);
         // return $response;

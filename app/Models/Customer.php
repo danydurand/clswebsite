@@ -198,7 +198,7 @@ class Customer extends Model implements \OwenIt\Auditing\Contracts\Auditable
 
     protected function setNameAttribute($value)
     {
-        $this->attributes['name'] = strtoupper(substr($value, 0, 100));
+        $this->attributes['name'] = length($value, 100);
     }
 
     protected function setEmailAttribute($value)

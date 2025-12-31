@@ -55,6 +55,9 @@
                 wire:click="sort('status')">
                 Status
             </flux:table.column>
+            {{-- <flux:table.column align="center">
+                Buy Ticket
+            </flux:table.column> --}}
         </flux:table.columns>
 
         <flux:table.rows>
@@ -68,14 +71,19 @@
 
                     <flux:table.cell class="text-center">{{ $raffle->stop_sale_time }}</flux:table.cell>
 
-                    <flux:table.cell>
+                    <flux:table.cell align="center">
                         <flux:badge size="sm" :color="$raffle?->status?->getColor()" inset="top bottom">
                             {{ $raffle?->status?->getLabel() }}
                         </flux:badge>
                     </flux:table.cell>
 
-                    {{-- <flux:table.cell>
-                        <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
+                    {{-- <flux:table.cell align="center">
+                        <flux:modal.trigger name="create-ticket">
+                            <flux:button variant="primary" icon="plus" color="blue"
+                                wire:click="buyTicket({{ $raffle->id }})">
+                                Buy Ticket
+                            </flux:button>
+                        </flux:modal.trigger>
                     </flux:table.cell> --}}
                 </flux:table.row>
             @endforeach
@@ -87,6 +95,5 @@
     <livewire:create-ticket />
     <livewire:random-bets />
     <livewire:random-bets-with-seeds />
-    {{-- <livewire:edit-note /> --}}
 
 </div>

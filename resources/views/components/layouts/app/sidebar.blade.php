@@ -25,7 +25,7 @@
                 <flux:navlist.item icon="trophy" :href="route('events')" :current="request()->routeIs('events')"
                     wire:navigate>{{ __('Events') }}
                 </flux:navlist.item>
-                <flux:navlist.item icon="swatch" :href="route('tickets')" :current="request()->routeIs('tickets')"
+                <flux:navlist.item icon="swatch" :href="route('tickets.index')" :current="request()->routeIs('tickets')"
                     wire:navigate>{{ __('My Tickets') }}
                 </flux:navlist.item>
             </flux:navlist.group>

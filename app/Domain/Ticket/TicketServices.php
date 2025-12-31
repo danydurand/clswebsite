@@ -3,9 +3,11 @@
 namespace App\Domain\Ticket;
 
 use App\Models\Bank;
+use App\Models\Game;
 use App\Models\Ticket;
 use App\Classes\PResponse;
 use Illuminate\Support\Str;
+use App\Models\SaleSequence;
 use App\Models\TicketAction;
 use App\Domain\User\UserTypeEnum;
 use Illuminate\Support\Collection;
@@ -17,6 +19,136 @@ use App\Domain\Ticket\TicketStatusEnum;
 class TicketServices
 {
 
+    public static function validateData(array $data): PResponse
+    {
+        info('');
+        info('TicketServices::validateData');
+        info('============================');
+        info('');
+
+        info('Validating: ' . print_r($data, true));
+
+        $response = new PResponse();
+        $response->okay = false;
+        $response->qtyErrors = 1;
+        $response->setData('colorMessage', 'red');
+
+        $bet = $data['sequence'];
+        $stake = $data['stake_amount'];
+        $raffle = $data['raffle_id'];
+        //-------------------------------------------
+        // The User must select a Raffle to play in
+        //-------------------------------------------
+        if (strlen($raffle) === 0) {
+            $response->userMessage = 'Choose a Raffle';
+            return $response;
+        }
+        info('Ok 1');
+        // return $response;
+        //------------------------------
+        // The User must provide a bet
+        //------------------------------
+        if (strlen($bet) <= 1) {
+            $response->userMessage = 'Type the Bet (at least to digits)';
+            return $response;
+        }
+        info('Ok 2');
+        //---------------------------------------
+        // The User must provide a stake amount
+        //---------------------------------------
+        if (strlen($stake) === 0) {
+            $response->userMessage = 'Type the Stake Amount';
+            return $response;
+        }
+        info('Ok 3');
+        //------------------------------------------------
+        // The stake amount must be in the allowed range
+        //------------------------------------------------
+        $min = sett('minimum-bet', 'float', 0.5);
+        $max = sett('maximum-bet', 'float', 600);
+        if (($stake < $min) || ($stake > $max)) {
+            $response->userMessage = "The Stake must be between: $min and $max";
+            return $response;
+        }
+        info('Ok 4');
+        //-----------------------
+        // The Game must exists 
+        //-----------------------
+        $game = Game::find($data['game_id']);
+        if (!($game instanceof Game)) {
+            $response->userMessage = "Invalid Game";
+            return $response;
+        }
+        info('Ok 5');
+        //--------------------------
+        // The bet must be numeric 
+        //--------------------------
+        if (!is_numeric($bet)) {
+            $response->userMessage = 'The Bet must be numeric';
+            return $response;
+        }
+        info('Ok 6');
+        //------------------------------------------------------------
+        // The bet number' digits count must match the selected game
+        //------------------------------------------------------------
+        $length = strlen($bet);
+        $gamePick = $game->pick;
+        if ($length != $gamePick) {
+            $response->userMessage = "Invalid Bet, you must provide $gamePick digits";
+            return $response;
+        }
+        info('Ok 7');
+        //----------------------------------------------------------------------------
+        // Based on the selected game, we create the required sequence which will be
+        // used to obtain the bet numbers 
+        //----------------------------------------------------------------------------
+        $sequence = SaleSequence::where('game_id', $game->id)->get();
+
+        // dd($sequence[0]['char']);
+
+        info('sequence: ' . print_r($sequence, true));
+        $bet .= $sequence[0]['char'];
+        info('bet: ' . $bet);
+        // dd($bet);
+        //------------------------------------------
+        // The bet must have a valid sale sequence
+        //------------------------------------------
+        $betParsed = self::parseBet($bet);
+        $betNumbers = [$betParsed['numbers']];
+        $betType = $betParsed['bet_type'];
+        $pick = $betParsed['pick'];
+        if ($betType === '/') {
+            $betNumbers = self::marriageCombinations($betParsed['numbers']);
+        }
+        info('betNumbers: ' . print_r($betNumbers, true));
+        info('betType: ' . $betType);
+        //----------------------------------------------------------
+        // The SaleSequence indicates the real games to be played
+        //----------------------------------------------------------
+        $games = SaleSequence::where('pick', $pick)
+            ->where('char', $betType)
+            ->get();
+        //--------------------------------------------------------
+        // If there is no match, then is an invalid bet sequence
+        //--------------------------------------------------------
+        if ((count($games) === 0) || (!($games[0] instanceof SaleSequence))) {
+            info('Invalid bet sequence: ' . $bet);
+            $response->userMessage = 'Invalid Bet';
+            return $response;
+        }
+        info('Ok 8');
+        //-------------------------------------------------------------------------------------
+        // Returns the real games to be played and the bet numbers clean without any modifier
+        //-------------------------------------------------------------------------------------
+        $response->okay = true;
+        $response->qtyErrors = 0;
+        $response->setData('colorMessage', 'green');
+        $response->setData('games', [['game_id' => $data['game_id']]]);
+        $response->setData('validRaffles', $raffle);
+        $response->setData('betNumbers', $betNumbers);
+        // dd($response);
+        return $response;
+    }
 
     public static function marriageCombinations(string $digits): array
     {

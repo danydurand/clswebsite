@@ -4,7 +4,9 @@
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Create Ticket</flux:heading>
-                <flux:text class="mt-2">Do your bet over a Lottery.</flux:text>
+                <flux:text class="mt-2" color="blue">Do your first bet over a Lottery/Raffles then cand continue adding
+                    bets.
+                </flux:text>
             </div>
 
             <div class="flex w-full gap-2">
@@ -48,62 +50,14 @@
             </div>
 
             <div class="flex w-full justify-between">
-                <div class="rounded-md mb-2 flex justify-center h-[32px] items-center w-6/7">
-                    <span class="font-semibold text-md text-{{$colorMessage}}-700">{{$userMessage}}</span>
+                <div class="rounded-md mb-2 flex justify-left h-[32px] items-center w-6/7">
+                    <span class="font-semibold text-md text-{{$colorMessage}}-500">{{$userMessage}}</span>
                 </div>
 
-                <flux:button type="submit" variant="primary" wire:click="save" class="w-1/7">Add Bet
+                <flux:button type="submit" variant="primary" wire:click="save" class="w-1/7">
+                    Save
                 </flux:button>
             </div>
-
-            {{-- The Ticket Details Table --}}
-            <flux:table :paginate="$ticketDetails">
-                <flux:table.columns>
-                    <flux:table.column>
-                        Lottery
-                    </flux:table.column>
-                    <flux:table.column sortable :sorted="$sortBy === 'raffle_id'" :direction="$sortDirection"
-                        wire:click="sort('raffle_id')">
-                        Raffle
-                    </flux:table.column>
-                    <flux:table.column sortable :sorted="$sortBy === 'game_id'" :direction="$sortDirection"
-                        align="center" wire:click="sort('game_id')">
-                        Game
-                    </flux:table.column>
-                    <flux:table.column sortable :sorted="$sortBy === 'sequence'" :direction="$sortDirection"
-                        align="center" wire:click="sort('sequence')">
-                        Sequence
-                    </flux:table.column>
-                    <flux:table.column sortable :sorted="$sortBy === 'stake_amount'" :direction="$sortDirection"
-                        align="center" wire:click="sort('stake_amount')">
-                        Stake Amount
-                    </flux:table.column>
-                    <flux:table.column sortable :sorted="$sortBy === 'won'" :direction="$sortDirection" align="center"
-                        wire:click="sort('won')">
-                        Won
-                    </flux:table.column>
-                </flux:table.columns>
-
-                <flux:table.rows>
-                    @foreach ($ticketDetails as $ticketDetail)
-                        <flux:table.row :key="$ticketDetail->id">
-                            <flux:table.cell>{{ $ticketDetail->raffle->lottery->name }}</flux:table.cell>
-                            <flux:table.cell>{{ $ticketDetail->raffle->raffle_time }}</flux:table.cell>
-                            <flux:table.cell>{{ $ticketDetail->game->name }}</flux:table.cell>
-                            <flux:table.cell class="text-center">{{ $ticketDetail->sequence }}</flux:table.cell>
-
-                            <flux:table.cell class="text-center">{{ $ticketDetail->stake_amount }}</flux:table.cell>
-
-                            <flux:table.cell>
-                                <flux:badge size="sm" :color="$ticketDetail->won ? 'green' : 'red'" inset="top bottom">
-                                    {{ $ticketDetail->won ? 'Won' : 'Lost' }}
-                                </flux:badge>
-                            </flux:table.cell>
-
-                        </flux:table.row>
-                    @endforeach
-                </flux:table.rows>
-            </flux:table>
 
     </flux:modal>
 </div>

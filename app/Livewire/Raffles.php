@@ -34,17 +34,13 @@ class Raffles extends Component
             ->paginate(5);
     }
 
+
     public function render()
     {
 
         return view('livewire.raffles', [
             'raffles' => $this->raffles,
         ]);
-    }
-
-    public function putBetOn($id)
-    {
-        $this->dispatch('create-ticket', $id);
     }
 
 
