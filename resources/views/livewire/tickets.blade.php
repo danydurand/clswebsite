@@ -3,90 +3,94 @@
     <flux:subheading size="lg" class="mb-6">{{ __('My lottery tickets') }}</flux:subheading>
     <flux:separator variant="subtle" />
 
-    @session('success')
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-            class="fixed top-5 right-5 z-50 bg-green-600 text-white text-sm p-4 rounded shadow-lg" role="alert">
-            <p>{{ $value }}</p>
-        </div>
-    @endsession()
+    {{-- @include('components.flash-message') --}}
 
-    {{-- <flux:modal.trigger name="create-ticket">
-        <flux:button class="mt-4 w-5/7 bg-blue-500 text-white">Create Ticket</flux:button>
-    </flux:modal.trigger> --}}
 
-    <table class="table-auto w-5/7 bg-slate-100 shadow-md rounded-lg mt-5">
-        <thead class="bg-slate-200">
-            <tr class="rounded-lg">
-                <th class="px-4 py-2 text-center">Created At</th>
-                <th class="px-4 py-2 text-center">Status</th>
-                <th class="px-4 py-2 text-center">Code</th>
-                <th class="px-4 py-2 text-right">Stake Amount</th>
-                <th class="px-4 py-2 text-center">Won?</th>
-                <th class="px-4 py-2 text-right">Prize</th>
-                <th class="px-4 py-2 text-center">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($tickets as $ticket)
-                <tr class="border-t">
-                    <td class="px-4 py-2 text-center">{{ $ticket->created_at }}</td>
-                    <td class="px-4 py-2 text-center">{{ $ticket->status }}</td>
-                    <td class="px-4 py-2 text-center">{{ $ticket->code }}</td>
-                    <td class="px-4 py-2 text-right">{{ $ticket->stake_amount }}</td>
-                    <td class="px-4 py-2 text-center">{{ $ticket->won }}</td>
-                    <td class="px-4 py-2 text-right">{{ $ticket->prize }}</td>
-                    <td class="px-4 py-2 text-center">
-                        <flux:button class="bg-blue-500 text-white" wire:click="edit({{ $ticket->id }})">
-                            Edit
+    <flux:modal.trigger name="create-ticket">
+        {{-- <flux:button class="mt-4 w-5/7 bg-blue-500 text-white">Create Ticket</flux:button> --}}
+        <flux:button class="w-1/3 h-10" variant="primary" color="blue">Buy a Lottery Ticket</flux:button>
+    </flux:modal.trigger>
+
+    {{-- The Tickets Table --}}
+    <flux:table :paginate="$tickets">
+        <flux:table.columns>
+            <flux:table.column sortable :sorted="$sortBy === 'id'" :direction="$sortDirection" align="start"
+                wire:click="sort('id')">
+                ID
+            </flux:table.column>
+            <flux:table.column sortable :sorted="$sortBy === 'created_at'" :direction="$sortDirection" align="center"
+                wire:click="sort('created_at')">
+                Created At
+            </flux:table.column>
+            <flux:table.column sortable :sorted="$sortBy === 'code'" :direction="$sortDirection" align="center"
+                wire:click="sort('code')">
+                Code
+            </flux:table.column>
+            <flux:table.column>
+                Qty Bets
+            </flux:table.column>
+            <flux:table.column sortable :sorted="$sortBy === 'stake_amount'" :direction="$sortDirection" align="end"
+                wire:click="sort('stake_amount')">
+                Stake Amount
+            </flux:table.column>
+            <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" align="center"
+                wire:click="sort('status')">
+                Status
+            </flux:table.column>
+            <flux:table.column sortable :sorted="$sortBy === 'won'" :direction="$sortDirection" align="center"
+                wire:click="sort('won')">
+                Won?
+            </flux:table.column>
+            <flux:table.column sortable :sorted="$sortBy === 'prize'" :direction="$sortDirection" align="center"
+                wire:click="sort('prize')">
+                Prize
+            </flux:table.column>
+            <flux:table.column align="start">
+                Actions
+            </flux:table.column>
+        </flux:table.columns>
+
+        <flux:table.rows>
+            @foreach ($tickets as $ticket)
+                <flux:table.row :key="$ticket->id">
+                    <flux:table.cell align="start" class="text-lg">{{ $ticket->id }}</flux:table.cell>
+
+                    <flux:table.cell align="center" class="text-lg">{{ $ticket->created_at }}</flux:table.cell>
+
+                    <flux:table.cell align="center" class="text-lg">{{ $ticket->code }}</flux:table.cell>
+
+                    <flux:table.cell align="center" class="text-lg">{{ $ticket->ticketDetails->count() }}</flux:table.cell>
+
+                    <flux:table.cell align="end" class="text-lg">{{ $ticket->stake_amount }}</flux:table.cell>
+
+                    <flux:table.cell align="center">
+                        <flux:badge size="md" :color="$ticket->status?->getColor()" inset="top bottom">
+                            {{ $ticket->status?->getLabel() }}
+                        </flux:badge>
+                    </flux:table.cell>
+
+                    <flux:table.cell align="center" class="text-lg">{{ $ticket->won }}</flux:table.cell>
+
+                    <flux:table.cell align="center" class="text-lg">{{ $ticket->prize }}</flux:table.cell>
+
+
+                    <flux:table.cell align="center" class="flex gap-2">
+                        <flux:button size="sm" variant="primary" icon="eye" color="teal"
+                            wire:click="viewTicket({{ $ticket->id }})">
+                            {{-- View --}}
                         </flux:button>
-                        <flux:button variant="danger" wire:click="delete({{ $ticket->id }})">
-                            Delete
+                        <flux:button size="sm" variant="primary" icon="pencil-square" color="orange"
+                            wire:click="editTicket({{ $ticket->id }})">
+                            {{-- Edit --}}
                         </flux:button>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="7" class="px-4 py-2 text-center">No tickets found</td>
-                    @php
-                        $ticket = null;
-                    @endphp
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+                    </flux:table.cell>
+                </flux:table.row>
+            @endforeach
+        </flux:table.rows>
+    </flux:table>
 
-    <div class="w-5/7 mt-4">
-        {{ $tickets->links() }}
-    </div>
 
-    <flux:modal name="delete-ticket" class="min-w-[22rem]">
-        <div class="space-y-6">
-            <div>
-                <flux:heading size="lg">Delete Ticket?</flux:heading>
+    <livewire:create-ticket />
 
-                <flux:text class="mt-2 text-center">
-                    Are you sure you want to delete the ticket with the code:
-                    <br><br>
-                    <strong>{{ $ticket?->code }}</strong>
-                    <br><br>
-                    This action cannot be reversed.
-                </flux:text>
-            </div>
-
-            <div class="flex gap-2">
-                <flux:spacer />
-
-                <flux:modal.close>
-                    <flux:button variant="ghost">Cancel</flux:button>
-                </flux:modal.close>
-
-                <flux:button type="submit" variant="danger" wire:click="deleteTicket()">Delete Ticket
-                </flux:button>
-            </div>
-        </div>
-    </flux:modal>
-
-    {{-- <livewire:create-ticket />
-    <livewire:edit-ticket /> --}}
 
 </div>

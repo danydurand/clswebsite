@@ -30,12 +30,12 @@ enum TicketStatusEnum: string //implements HasLabel, HasColor, HasIcon
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::Pending => 'warning',
-            self::Paid => 'success',
-            self::Cancelled => 'secondary',
-            self::Winner => 'success',
-            self::Looser => 'danger',
-            self::AutoCancelled => 'info',
+            self::Pending => 'pink',
+            self::Paid => 'blue',
+            self::Cancelled => 'zinc',
+            self::Winner => 'green',
+            self::Looser => 'red',
+            self::AutoCancelled => 'indigo',
         };
     }
 

@@ -228,7 +228,7 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
     //-----------
     protected function setNameAttribute($value)
     {
-        $this->attributes['name'] = strtoupper(substr($value, 0, 100));
+        $this->attributes['name'] = length($value, 100);
     }
 
     protected function setBannedReasonAttribute($value)

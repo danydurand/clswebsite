@@ -11,20 +11,36 @@ class Raffles extends Component
 
     use WithPagination;
 
-    public function render()
-    {
-        $raffles = Raffle::unavailable()
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+    public $sortBy = 'raffle_date';
+    public $sortDirection = 'desc';
 
-        return view('livewire.raffles', [
-            'raffles' => $raffles,
-        ]);
+    public function sort($column)
+    {
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
     }
 
-    public function putBetOn($id)
+    #[\Livewire\Attributes\Computed]
+    public function raffles()
     {
-        $this->dispatch('create-ticket', $id);
+        return Raffle::query()
+            ->available()
+            ->tap(fn($query) => $this->sortBy ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
+            ->take(10)
+            ->paginate(5);
+    }
+
+
+    public function render()
+    {
+
+        return view('livewire.raffles', [
+            'raffles' => $this->raffles,
+        ]);
     }
 
 
