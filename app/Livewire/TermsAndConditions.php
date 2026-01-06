@@ -33,7 +33,7 @@ class TermsAndConditions extends Component
         }
     }
 
-    #[\Livewire\Attributes\Layout('components.layouts.auth.simple')]
+    #[\Livewire\Attributes\Layout('components.layouts.public')]
     public function render()
     {
         return view('livewire.terms-and-conditions');
