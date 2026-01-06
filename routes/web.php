@@ -16,6 +16,18 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Language switching
+Route::get('/lang/{locale}', [App\Http\Controllers\LanguageController::class, 'switch'])->name('lang.switch');
+
+// Public pages
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
 Route::get('/terms-and-conditions', \App\Livewire\TermsAndConditions::class)
     ->name('terms-and-conditions');
 
