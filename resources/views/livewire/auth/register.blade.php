@@ -58,6 +58,20 @@
                     autocomplete="new-password" :placeholder="__('Confirm password')" viewable />
             </div>
 
+            <!-- Terms and Conditions Acceptance -->
+            <div class="space-y-2">
+                <label class="flex items-start gap-3">
+                    <flux:checkbox name="terms_accepted" value="1" required />
+                    <span class="text-sm text-zinc-700 dark:text-zinc-300">
+                        {{ __('I accept the') }}
+                        <a href="{{ route('terms-and-conditions') }}" target="_blank"
+                            class="text-blue-600 dark:text-blue-400 hover:underline">
+                            {{ __('Terms and Conditions') }}
+                        </a>
+                    </span>
+                </label>
+            </div>
+
             <div class="flex items-center justify-end">
                 <flux:button type="submit" variant="primary" class="w-full" data-test="register-user-button">
                     {{ __('Create account') }}

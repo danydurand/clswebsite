@@ -16,6 +16,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::get('/terms-and-conditions', \App\Livewire\TermsAndConditions::class)
+    ->name('terms-and-conditions');
+
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
