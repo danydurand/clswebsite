@@ -49,8 +49,13 @@ class CreateNewUser implements CreatesNewUsers
                 'date',
                 'before:' . now()->subYears(18)->format('Y-m-d'),
             ],
+            'terms_accepted' => [
+                'required',
+                'accepted',
+            ],
         ], [
             'birth_date.before' => 'You must be at least 18 years old to register.',
+            'terms_accepted.accepted' => 'You must accept the Terms and Conditions to register.',
         ])->validate();
 
         return DB::transaction(function () use ($input) {
