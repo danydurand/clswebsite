@@ -46,6 +46,42 @@
                     </svg>
                     <span class="font-medium">{{ __('Appearance') }}</span>
                 </a>
+
+                <!-- Language Switcher -->
+                <div class="relative group">
+                    <button
+                        class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-gray-700 transition-all hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-blue-600 dark:text-gray-300 dark:hover:bg-zinc-800">
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z" />
+                        </svg>
+                        <span class="flex-1 text-left font-medium">{{ __('Language') }}</span>
+                        <span
+                            class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">{{ app()->getLocale() }}</span>
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+                    <div
+                        class="absolute left-0 top-full mt-1 w-full rounded-lg border border-gray-200 bg-white opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all shadow-xl dark:border-zinc-700 dark:bg-zinc-800 z-10">
+                        <a href="{{ route('lang.switch', 'en') }}"
+                            class="flex items-center gap-2 rounded-t-lg px-4 py-2.5 text-sm transition-colors {{ app()->getLocale() === 'en' ? 'bg-gradient-to-r from-blue-50 to-purple-50 font-semibold text-blue-700 dark:from-blue-950/20 dark:to-purple-950/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:text-gray-300 dark:hover:bg-zinc-700' }}">
+                            <span class="text-lg">🇺🇸</span>
+                            <span>{{ __('English') }}</span>
+                        </a>
+                        <a href="{{ route('lang.switch', 'es') }}"
+                            class="flex items-center gap-2 px-4 py-2.5 text-sm transition-colors {{ app()->getLocale() === 'es' ? 'bg-gradient-to-r from-blue-50 to-purple-50 font-semibold text-blue-700 dark:from-blue-950/20 dark:to-purple-950/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:text-gray-300 dark:hover:bg-zinc-700' }}">
+                            <span class="text-lg">🇪🇸</span>
+                            <span>{{ __('Spanish') }}</span>
+                        </a>
+                        <a href="{{ route('lang.switch', 'fr') }}"
+                            class="flex items-center gap-2 rounded-b-lg px-4 py-2.5 text-sm transition-colors {{ app()->getLocale() === 'fr' ? 'bg-gradient-to-r from-blue-50 to-purple-50 font-semibold text-blue-700 dark:from-blue-950/20 dark:to-purple-950/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:text-gray-300 dark:hover:bg-zinc-700' }}">
+                            <span class="text-lg">🇫🇷</span>
+                            <span>{{ __('French') }}</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

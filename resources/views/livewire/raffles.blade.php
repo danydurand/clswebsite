@@ -1,99 +1,167 @@
-<div class="relative mb-6 w-5/7 mx-auto">
-    <flux:heading size="xl" level="1">{{ __('Raffles') }}</flux:heading>
-    <flux:subheading size="lg" class="mb-6">{{ __('Available raffles where you can bet') }}</flux:subheading>
-    <flux:separator variant="subtle" />
+<div class="w-full">
+    <!-- Gradient Header -->
+    <div class="relative mb-8 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 shadow-lg">
+        <div class="relative z-10">
+            <flux:heading size="xl" level="1" class="text-white">{{ __('Raffles') }}</flux:heading>
+            <flux:subheading size="lg" class="text-blue-100">{{ __('Available raffles where you can bet') }}
+            </flux:subheading>
+        </div>
 
-    {{-- The Session Messages --}}
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 right-0 h-64 w-64 rounded-full bg-blue-500 opacity-20 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-purple-500 opacity-20 blur-3xl"></div>
+    </div>
+
+    {{-- Session Messages --}}
     @session('success')
         <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-            class="fixed top-5 right-5 z-50 bg-green-200 text-green-800 text-sm p-4 rounded shadow-lg" role="alert">
-            <p>{{ $value }}</p>
+            class="fixed top-5 right-5 z-50 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 p-4 text-white shadow-xl"
+            role="alert">
+            <div class="flex items-center gap-2">
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                </svg>
+                <p class="font-medium">{{ $value }}</p>
+            </div>
         </div>
-    @endsession()
+    @endsession
 
     @session('error')
         <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-            class="fixed top-5 right-5 z-50 bg-red-200 text-red-800 text-sm p-4 rounded shadow-lg" role="alert">
-            <p>{{ $value }}</p>
+            class="fixed top-5 right-5 z-50 rounded-lg bg-gradient-to-r from-red-500 to-pink-600 p-4 text-white shadow-xl"
+            role="alert">
+            <div class="flex items-center gap-2">
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+                <p class="font-medium">{{ $value }}</p>
+            </div>
         </div>
-    @endsession()
+    @endsession
 
-    {{-- The Buttons to create a ticket --}}
-    <div class="flex justify-between w-full gap-2 mb-4 mt-4">
+    {{-- Action Buttons --}}
+    <div class="mb-6 grid gap-4 md:grid-cols-3">
         <flux:modal.trigger name="create-ticket">
-            <flux:button class="w-1/3 h-10" variant="primary" color="blue">Buy a Lottery Ticket</flux:button>
+            <button
+                class="group relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-left shadow-lg transition-all hover:shadow-xl hover:scale-105">
+                <div class="relative z-10">
+                    <div
+                        class="mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm">
+                        <svg class="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M22 10V6c0-1.1-.9-2-2-2H4c-1.1 0-1.99.9-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2zm-2-1.46c-1.19.69-2 1.99-2 3.46s.81 2.77 2 3.46V18H4v-2.54c1.19-.69 2-1.99 2-3.46 0-1.48-.8-2.77-1.99-3.46L4 6h16v2.54z" />
+                        </svg>
+                    </div>
+                    <h3 class="mb-1 text-lg font-bold text-white">{{ __('Buy Lottery Ticket') }}</h3>
+                    <p class="text-sm text-blue-100">{{ __('Create your own ticket') }}</p>
+                </div>
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 transition-opacity group-hover:opacity-100">
+                </div>
+            </button>
         </flux:modal.trigger>
+
         <flux:modal.trigger name="random-bets">
-            <flux:button class="w-1/3 h-10" variant="primary" color="green">I want random bets</flux:button>
+            <button
+                class="group relative overflow-hidden rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 p-6 text-left shadow-lg transition-all hover:shadow-xl hover:scale-105">
+                <div class="relative z-10">
+                    <div
+                        class="mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm">
+                        <svg class="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z" />
+                        </svg>
+                    </div>
+                    <h3 class="mb-1 text-lg font-bold text-white">{{ __('Random Bets') }}</h3>
+                    <p class="text-sm text-green-100">{{ __('Let us pick for you') }}</p>
+                </div>
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-700 opacity-0 transition-opacity group-hover:opacity-100">
+                </div>
+            </button>
         </flux:modal.trigger>
+
         <flux:modal.trigger name="random-bets-with-seeds">
-            <flux:button class="w-1/3 h-10" variant="primary" color="orange">I want random bets with my own numbers
-            </flux:button>
+            <button
+                class="group relative overflow-hidden rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 p-6 text-left shadow-lg transition-all hover:shadow-xl hover:scale-105">
+                <div class="relative z-10">
+                    <div
+                        class="mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm">
+                        <svg class="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M17.5 4.5c-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-1.45-1.1-3.55-1.5-5.5-1.5zM21 18.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z" />
+                        </svg>
+                    </div>
+                    <h3 class="mb-1 text-lg font-bold text-white">{{ __('Random with Seeds') }}</h3>
+                    <p class="text-sm text-orange-100">{{ __('Your numbers + random') }}</p>
+                </div>
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-orange-600 to-amber-700 opacity-0 transition-opacity group-hover:opacity-100">
+                </div>
+            </button>
         </flux:modal.trigger>
     </div>
 
-    {{-- The Raffles Table --}}
-    <flux:table :paginate="$raffles">
-        <flux:table.columns>
-            <flux:table.column sortable :sorted="$sortBy === 'lottery_id'" :direction="$sortDirection"
-                wire:click="sort('lottery_id')">
-                Lottery
-            </flux:table.column>
-            <flux:table.column sortable :sorted="$sortBy === 'raffle_date'" :direction="$sortDirection" align="center"
-                wire:click="sort('raffle_date')">
-                Date
-            </flux:table.column>
-            <flux:table.column sortable :sorted="$sortBy === 'raffle_time'" :direction="$sortDirection" align="center"
-                wire:click="sort('raffle_time')">
-                Time
-            </flux:table.column>
-            <flux:table.column sortable :sorted="$sortBy === 'stop_sale_time'" :direction="$sortDirection"
-                align="center" wire:click="sort('stop_sale_time')">
-                Stop Sale Time
-            </flux:table.column>
-            <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" align="center"
-                wire:click="sort('status')">
-                Status
-            </flux:table.column>
-            {{-- <flux:table.column align="center">
-                Buy Ticket
-            </flux:table.column> --}}
-        </flux:table.columns>
+    {{-- Raffles Table --}}
+    <div class="rounded-xl bg-white p-6 shadow-md dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700">
+        <flux:table :paginate="$raffles">
+            <flux:table.columns>
+                <flux:table.column sortable :sorted="$sortBy === 'lottery_id'" :direction="$sortDirection"
+                    wire:click="sort('lottery_id')">
+                    {{ __('Lottery') }}
+                </flux:table.column>
+                <flux:table.column sortable :sorted="$sortBy === 'raffle_date'" :direction="$sortDirection"
+                    align="center" wire:click="sort('raffle_date')">
+                    {{ __('Date') }}
+                </flux:table.column>
+                <flux:table.column sortable :sorted="$sortBy === 'raffle_time'" :direction="$sortDirection"
+                    align="center" wire:click="sort('raffle_time')">
+                    {{ __('Time') }}
+                </flux:table.column>
+                <flux:table.column sortable :sorted="$sortBy === 'stop_sale_time'" :direction="$sortDirection"
+                    align="center" wire:click="sort('stop_sale_time')">
+                    {{ __('Stop Sale Time') }}
+                </flux:table.column>
+                <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" align="center"
+                    wire:click="sort('status')">
+                    {{ __('Status') }}
+                </flux:table.column>
+            </flux:table.columns>
 
-        <flux:table.rows>
-            @foreach ($raffles as $raffle)
-                <flux:table.row :key="$raffle->id">
-                    <flux:table.cell>{{ $raffle->lottery->name }}</flux:table.cell>
+            <flux:table.rows>
+                @foreach ($raffles as $raffle)
+                    <flux:table.row :key="$raffle->id">
+                        <flux:table.cell>
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold">
+                                    {{ substr($raffle->lottery->name, 0, 2) }}
+                                </div>
+                                <span class="font-medium">{{ $raffle->lottery->name }}</span>
+                            </div>
+                        </flux:table.cell>
 
-                    <flux:table.cell class="text-center">{{ $raffle->raffle_date->format('Y-m-d') }}</flux:table.cell>
+                        <flux:table.cell class="text-center">{{ $raffle->raffle_date->format('Y-m-d') }}</flux:table.cell>
 
-                    <flux:table.cell class="text-center">{{ $raffle->raffle_time }}</flux:table.cell>
+                        <flux:table.cell class="text-center font-medium">{{ $raffle->raffle_time }}</flux:table.cell>
 
-                    <flux:table.cell class="text-center">{{ $raffle->stop_sale_time }}</flux:table.cell>
+                        <flux:table.cell class="text-center text-sm text-gray-600 dark:text-gray-400">
+                            {{ $raffle->stop_sale_time }}
+                        </flux:table.cell>
 
-                    <flux:table.cell align="center">
-                        <flux:badge size="sm" :color="$raffle?->status?->getColor()" inset="top bottom">
-                            {{ $raffle?->status?->getLabel() }}
-                        </flux:badge>
-                    </flux:table.cell>
-
-                    {{-- <flux:table.cell align="center">
-                        <flux:modal.trigger name="create-ticket">
-                            <flux:button variant="primary" icon="plus" color="blue"
-                                wire:click="buyTicket({{ $raffle->id }})">
-                                Buy Ticket
-                            </flux:button>
-                        </flux:modal.trigger>
-                    </flux:table.cell> --}}
-                </flux:table.row>
-            @endforeach
-        </flux:table.rows>
-    </flux:table>
-
-
+                        <flux:table.cell align="center">
+                            <flux:badge size="sm" :color="$raffle?->status?->getColor()" inset="top bottom">
+                                {{ $raffle?->status?->getLabel() }}
+                            </flux:badge>
+                        </flux:table.cell>
+                    </flux:table.row>
+                @endforeach
+            </flux:table.rows>
+        </flux:table>
+    </div>
 
     <livewire:create-ticket />
     <livewire:random-bets />
     <livewire:random-bets-with-seeds />
-
 </div>
