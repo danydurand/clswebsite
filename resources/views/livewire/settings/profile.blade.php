@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 new class extends Component {
     public string $name = '';
     public string $email = '';
+    public string $phone = '';
 
     /**
      * Mount the component.
@@ -18,6 +19,7 @@ new class extends Component {
     {
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
+        $this->phone = Auth::user()->customer->phone ?? '';
     }
 
     /**
@@ -38,15 +40,28 @@ new class extends Component {
                 'max:255',
                 Rule::unique(User::class)->ignore($user->id)
             ],
+
+            'phone' => ['required', 'string', 'max:20'],
         ]);
 
-        $user->fill($validated);
+        $user->fill([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+        ]);
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
         $user->save();
+
+        // Update customer data
+        if ($user->customer) {
+            $user->customer->update([
+                'phone' => $validated['phone'],
+                'name' => $validated['name'], // Keep customer name in sync
+            ]);
+        }
 
         Flash::success('Profile updated successfully');
 
@@ -84,8 +99,12 @@ new class extends Component {
             <div>
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ auth()->user()->name }}</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">{{ auth()->user()->email }}</p>
+                @if(auth()->user()->customer?->phone)
+                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ auth()->user()->customer->phone }}</p>
+                @endif
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-500">{{ __('Member since') }}
-                    {{ auth()->user()->created_at->format('M Y') }}</p>
+                    {{ auth()->user()->created_at->format('M Y') }}
+                </p>
             </div>
         </div>
 
@@ -94,6 +113,12 @@ new class extends Component {
             <div>
                 <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name"
                     class="w-full" />
+            </div>
+
+            <!-- Phone Field -->
+            <div>
+                <flux:input wire:model="phone" :label="__('Phone Number')" type="tel" required autocomplete="tel"
+                    class="w-full" placeholder="+1 (555) 123-4567" />
             </div>
 
             <!-- Email Field -->

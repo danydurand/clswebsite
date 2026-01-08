@@ -48,6 +48,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('tickets/view/{id}', ViewTicket::class)->name('tickets.view');
     Route::get('tickets/edit/{id}', EditTicket::class)->name('tickets.edit');
     Route::get('tickets/how-to-play/{id}', HowToPlay::class)->name('tickets.how-to-play');
+    Route::get('tickets/print/{id}', function ($id) {
+        $ticket = \App\Models\Ticket::with(['ticketDetails.raffle.lottery', 'ticketDetails.game'])->findOrFail($id);
+        return view('tickets.online-ticket-pdf', compact('ticket'));
+    })->name('tickets.print');
 
 });
 

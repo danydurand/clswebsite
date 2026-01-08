@@ -288,4 +288,10 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
     {
         return $this->hasMany(User::class, 'referrer_id');
     }
+
+    // The customer associated with this user
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

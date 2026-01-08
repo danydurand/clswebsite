@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Helpers\Flash;
 use App\Models\Ticket;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class ViewTicket extends Component
 {
@@ -57,6 +58,22 @@ class ViewTicket extends Component
         $ticket->delete();
         Flash::success('Ticket deleted successfully');
         return redirect()->route('tickets.index');
+    }
+
+    public function printTicket()
+    {
+        // Register the print action in the database
+        // $this->ticket->actions()->create([
+        //     'ticket_id' => $this->ticket->id,
+        //     'action' => \App\Domain\Ticket\TicketActionEnum::Printed,
+        //     'executed_by' => Auth::user()->id,
+        //     'executed_at' => now(),
+        //     'security_code' => $this->ticket->security_code,
+        //     'comments' => 'Ticket printed from online view',
+        // ]);
+
+        // Redirect to printable view
+        return redirect()->route('tickets.print', $this->ticket->id);
     }
 
     public function render()
