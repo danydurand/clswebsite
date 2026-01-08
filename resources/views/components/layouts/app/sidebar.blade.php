@@ -41,15 +41,8 @@
             <x-ui.sidebar-nav-item 
                 :href="route('raffles')" 
                 icon="arrow-path" 
-                :label="__('Raffles')"
+                :label="__('Lottery Games')"
                 :active="request()->routeIs('raffles')"
-            />
-            
-            <x-ui.sidebar-nav-item 
-                :href="route('events')" 
-                icon="trophy" 
-                :label="__('Events')"
-                :active="request()->routeIs('events')"
             />
             
             <x-ui.sidebar-nav-item 
@@ -57,6 +50,13 @@
                 icon="ticket" 
                 :label="__('My Tickets')"
                 :active="request()->routeIs('tickets*')"
+            />
+
+            <x-ui.sidebar-nav-item 
+                :href="route('events')" 
+                icon="trophy" 
+                :label="__('Events')"
+                :active="request()->routeIs('events')"
             />
         </div>
 

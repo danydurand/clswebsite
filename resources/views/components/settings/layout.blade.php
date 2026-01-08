@@ -27,7 +27,7 @@
                     <span class="font-medium">{{ __('Password') }}</span>
                 </a>
 
-                @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
+                {{-- @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
                     <a href="{{ route('two-factor.show') }}" wire:navigate
                         class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all {{ request()->routeIs('two-factor.show') ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-blue-600 dark:text-gray-300 dark:hover:bg-zinc-800' }}">
                         <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -36,7 +36,7 @@
                         </svg>
                         <span class="font-medium">{{ __('Two-Factor Auth') }}</span>
                     </a>
-                @endif
+                @endif --}}
 
                 <a href="{{ route('appearance.edit') }}" wire:navigate
                     class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all {{ request()->routeIs('appearance.edit') ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-blue-600 dark:text-gray-300 dark:hover:bg-zinc-800' }}">
