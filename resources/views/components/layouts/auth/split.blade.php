@@ -134,6 +134,8 @@
             </div>
         </div>
     </div>
+
+    @stack('scripts')
     @fluxScripts
 </body>
 

@@ -106,4 +106,8 @@
             </flux:link>
         </div>
     </div>
+
+    @push('scripts')
+        <script src="{{ asset('js/register-form-persistence.js') }}"></script>
+    @endpush
 </x-layouts.auth>
