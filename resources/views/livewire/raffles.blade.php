@@ -2,8 +2,8 @@
     <!-- Gradient Header -->
     <div class="relative mb-8 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 shadow-lg">
         <div class="relative z-10">
-            <flux:heading size="xl" level="1" class="text-white">{{ __('Raffles') }}</flux:heading>
-            <flux:subheading size="lg" class="text-blue-100">{{ __('Available raffles where you can bet') }}
+            <flux:heading size="xl" level="1" class="text-white">{{ __('Lottery Games') }}</flux:heading>
+            <flux:subheading size="lg" class="text-blue-100">{{ __('Available draws where you can bet') }}
             </flux:subheading>
         </div>
 
@@ -123,6 +123,9 @@
                     align="center" wire:click="sort('stop_sale_time')">
                     {{ __('Stop Sale Time') }}
                 </flux:table.column>
+                <flux:table.column align="center">
+                    {{ __('Remaining Time') }}
+                </flux:table.column>
                 <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" align="center"
                     wire:click="sort('status')">
                     {{ __('Status') }}
@@ -148,6 +151,36 @@
 
                         <flux:table.cell class="text-center text-sm text-gray-600 dark:text-gray-400">
                             {{ $raffle->stop_sale_time }}
+                        </flux:table.cell>
+
+                        <flux:table.cell class="text-center">
+                            <div x-data="{
+                                    remaining: '',
+                                    targetTime: null,
+                                    init() {
+                                        const raffleDate = '{{ $raffle->raffle_date->format('Y-m-d') }}';
+                                        const stopTime = '{{ $raffle->stop_sale_time }}';
+                                        this.targetTime = new Date(raffleDate + ' ' + stopTime).getTime();
+                                        this.updateRemaining();
+                                        setInterval(() => this.updateRemaining(), 1000);
+                                    },
+                                    updateRemaining() {
+                                        const now = new Date().getTime();
+                                        const distance = this.targetTime - now;
+
+                                        if (distance < 0) {
+                                            this.remaining = '{{ __('Expired') }}';
+                                            return;
+                                        }
+
+                                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                                        this.remaining = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+                                    }
+                                }" x-text="remaining" class="font-mono text-sm font-semibold"
+                                :class="remaining === '{{ __('Expired') }}' ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'">
+                            </div>
                         </flux:table.cell>
 
                         <flux:table.cell align="center">
