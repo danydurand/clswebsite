@@ -172,5 +172,12 @@
     "Prize": "Prix",
     "Actions": "Actions",
     "Yes": "Oui",
-    "No": "Non"
+    "No": "Non",
+    "FAQs": "FAQ",
+    "Frequently Asked Questions": "Questions Fréquemment Posées",
+    "Find answers to common questions about our platform": "Trouvez des réponses aux questions courantes sur notre plateforme",
+    "Still have questions?": "Vous avez encore des questions?",
+    "Can't find the answer you're looking for? Please contact our support team.": "Vous ne trouvez pas la réponse que vous cherchez? Veuillez contacter notre équipe de support.",
+    "Contact Support": "Contacter le Support",
+    "No FAQs available at this time.": "Aucune FAQ disponible pour le moment."
 }

@@ -17,6 +17,8 @@
                     class="text-gray-700 hover:text-blue-600 font-medium transition">{{ __('About Us') }}</a>
                 <a href="{{ route('contact') }}"
                     class="text-gray-700 hover:text-blue-600 font-medium transition">{{ __('Contact') }}</a>
+                <a href="{{ route('faqs') }}"
+                    class="text-gray-700 hover:text-blue-600 font-medium transition">{{ __('FAQs') }}</a>
                 <a href="{{ route('terms-and-conditions') }}"
                     class="text-gray-700 hover:text-blue-600 font-medium transition">{{ __('Terms and Conditions') }}</a>
             </div>
@@ -90,6 +92,8 @@
                 class="block px-3 py-2 text-gray-700 hover:bg-blue-50 rounded-md">{{ __('About Us') }}</a>
             <a href="{{ route('contact') }}"
                 class="block px-3 py-2 text-gray-700 hover:bg-blue-50 rounded-md">{{ __('Contact') }}</a>
+            <a href="{{ route('faqs') }}"
+                class="block px-3 py-2 text-gray-700 hover:bg-blue-50 rounded-md">{{ __('FAQs') }}</a>
             <a href="{{ route('terms-and-conditions') }}"
                 class="block px-3 py-2 text-gray-700 hover:bg-blue-50 rounded-md">{{ __('Terms and Conditions') }}</a>
             <div class="border-t pt-2 mt-2">

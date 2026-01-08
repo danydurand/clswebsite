@@ -80,7 +80,7 @@
                     <flux:checkbox name="terms_accepted" value="1" required />
                     <span class="text-sm text-gray-700 dark:text-gray-300">
                         {{ __('I accept the') }}
-                        <a href="{{ route('terms-and-conditions') }}" target="_blank"
+                        <a href="{{ route('terms-and-conditions', ['source' => 'register']) }}" target="_blank"
                             class="text-blue-600 hover:text-purple-600 font-semibold transition-colors">
                             {{ __('Terms and Conditions') }}
                         </a>

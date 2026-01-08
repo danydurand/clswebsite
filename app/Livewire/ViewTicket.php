@@ -53,6 +53,7 @@ class ViewTicket extends Component
     public function deleteTicket($id)
     {
         $ticket = Ticket::findOrFail($id);
+        $ticket->actions()->delete();
         $ticket->delete();
         Flash::success('Ticket deleted successfully');
         return redirect()->route('tickets.index');

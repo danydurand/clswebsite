@@ -24,11 +24,15 @@ Route::get('/about', function () {
     return view('about');
 })->name('about');
 
-Route::get('/contact', [App\Http\Controllers\ContactController::class, 'show'])->name('contact');
-Route::post('/contact', [App\Http\Controllers\ContactController::class, 'send'])->name('contact.send');
+Route::get('/contact', [\App\Http\Controllers\ContactController::class, 'show'])->name('contact');
+Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'send'])->name('contact.send');
 
 Route::get('/terms-and-conditions', \App\Livewire\TermsAndConditions::class)
     ->name('terms-and-conditions');
+
+Route::get('/faqs', \App\Livewire\Faqs::class)
+    ->name('faqs');
+
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

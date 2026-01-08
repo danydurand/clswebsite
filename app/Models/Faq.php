@@ -6,13 +6,13 @@ use App\Models\Traits\HandleActive;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class TermAndCondition extends Model implements \OwenIt\Auditing\Contracts\Auditable
+class Faq extends Model implements \OwenIt\Auditing\Contracts\Auditable
 {
     use \OwenIt\Auditing\Auditable;
     use HasFactory;
     use HandleActive;
 
-    protected $table = 'term_and_conditions_view';
+    protected $table = 'faq_view';
 
     /**
      * The attributes that are mass assignable.

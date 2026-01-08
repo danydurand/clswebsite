@@ -28,7 +28,9 @@
 </head>
 
 <body class="antialiased bg-gray-50">
-    @include('partials.navigation')
+    @if(!request()->has('source') || request('source') !== 'register')
+        @include('partials.navigation')
+    @endif
 
     <!-- Main Content -->
     {{ $slot }}
