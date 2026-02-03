@@ -34,7 +34,7 @@ Route::get('/faqs', \App\Livewire\Faqs::class)
     ->name('faqs');
 
 
-Route::view('dashboard', 'dashboard')
+Route::get('dashboard', \App\Livewire\Dashboard::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 

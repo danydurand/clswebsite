@@ -137,20 +137,20 @@ class Ticket extends Model implements \OwenIt\Auditing\Contracts\Auditable
      * @var array
      */
     protected $casts = [
-        'id'              => 'integer',
-        'customer_id'     => 'integer',
-        'payment_status'  => PaymentStatusEnum::class,
-        'status'          => TicketStatusEnum::class,
-        'won'             => 'boolean',
+        'id' => 'integer',
+        'customer_id' => 'integer',
+        'payment_status' => PaymentStatusEnum::class,
+        'status' => TicketStatusEnum::class,
+        'won' => 'boolean',
         'physically_sold' => 'boolean',
-        'terminal_id'     => 'integer',
-        'consortium_id'   => 'integer',
-        'supervisor_id'   => 'integer',
-        'group_id'        => 'integer',
-        'seller_id'       => 'integer',
-        'bank_id'         => 'integer',
-        'payment_id'      => 'integer',
-        'data'            => 'json',
+        'terminal_id' => 'integer',
+        'consortium_id' => 'integer',
+        'supervisor_id' => 'integer',
+        'group_id' => 'integer',
+        'seller_id' => 'integer',
+        'bank_id' => 'integer',
+        'payment_id' => 'integer',
+        'data' => 'json',
     ];
 
     public $appends = [
@@ -171,10 +171,10 @@ class Ticket extends Model implements \OwenIt\Auditing\Contracts\Auditable
     //----------
     // Scopes
     //----------
-    public function scopePhysicalSale($query)
-    {
-        return $query->whereNotNull('seller_id');
-    }
+    // public function scopePhysicalSale($query)
+    // {
+    //     return $query->whereNotNull('seller_id');
+    // }
 
     public function scopePaid($query)
     {
@@ -205,7 +205,7 @@ class Ticket extends Model implements \OwenIt\Auditing\Contracts\Auditable
     public function scopeOneMonthBefore($query)
     {
         return $query->where('created_at', '>=', now()->startOfMonth()->subMonth())
-                    ->where('created_at', '<=', now()->endOfMonth()->subMonth());
+            ->where('created_at', '<=', now()->endOfMonth()->subMonth());
     }
 
     public function scopeToday($query)
@@ -216,7 +216,7 @@ class Ticket extends Model implements \OwenIt\Auditing\Contracts\Auditable
     public function scopeThisMonth($query)
     {
         return $query->where('created_at', '>=', now()->startOfMonth())
-                    ->where('created_at', '<=', now()->endOfMonth());
+            ->where('created_at', '<=', now()->endOfMonth());
     }
 
     public function scopeByConsortium($query, int $consortiumId)
@@ -229,20 +229,20 @@ class Ticket extends Model implements \OwenIt\Auditing\Contracts\Auditable
         return $query->where('bank_id', $bankId);
     }
 
-    public function scopeByTerminal($query, int $terminalId)
-    {
-        return $query->where('terminal_id', $terminalId);
-    }
+    // public function scopeByTerminal($query, int $terminalId)
+    // {
+    //     return $query->where('terminal_id', $terminalId);
+    // }
 
-    public function scopeBySupervisor($query, int $supervisorId)
-    {
-        return $query->where('supervisor_id', $supervisorId);
-    }
+    // public function scopeBySupervisor($query, int $supervisorId)
+    // {
+    //     return $query->where('supervisor_id', $supervisorId);
+    // }
 
-    public function scopeBySeller($query, int $sellerId)
-    {
-        return $query->where('seller_id', $sellerId);
-    }
+    // public function scopeBySeller($query, int $sellerId)
+    // {
+    //     return $query->where('seller_id', $sellerId);
+    // }
 
     public function scopeByCustomer($query, int $customerId)
     {
@@ -253,7 +253,7 @@ class Ticket extends Model implements \OwenIt\Auditing\Contracts\Auditable
     public function scopeWinner($query)
     {
         return $query->where('won', true)
-                    ->notCancelled();
+            ->notCancelled();
     }
 
     public function scopeLooser($query)
@@ -284,62 +284,62 @@ class Ticket extends Model implements \OwenIt\Auditing\Contracts\Auditable
 
     protected function number(): Attribute
     {
-        $id         = str_pad($this->id, 8, '0', STR_PAD_LEFT);
-        $bankId     = str_pad($this->bank_id, 6, '0', STR_PAD_LEFT);
-        $sellerId   = str_pad($this->seller_id, 6, '0', STR_PAD_LEFT);
+        $id = str_pad($this->id, 8, '0', STR_PAD_LEFT);
+        $bankId = str_pad($this->bank_id, 6, '0', STR_PAD_LEFT);
+        $sellerId = str_pad($this->seller_id, 6, '0', STR_PAD_LEFT);
         $customerId = str_pad($this->customer_id, 8, '0', STR_PAD_LEFT);
         if ($this->seller_id) {
             //-------------------------
             // It was physically sold
             //-------------------------
-            $number = $bankId.'-'.$sellerId.'-'.$id;
+            $number = $bankId . '-' . $sellerId . '-' . $id;
         } else {
             //-------------------------
             // It was sold online
             //-------------------------
-            $number = $customerId.'-'.$id;
+            $number = $customerId . '-' . $id;
         }
         return Attribute::make(
-            get: fn ($value) => $number,
+            get: fn($value) => $number,
         );
     }
 
     protected function stakeAmount(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => bcmul($value, 100, 0),
-            get: fn ($value) => bcdiv($value, 100, 2)
+            set: fn($value) => bcmul($value, 100, 0),
+            get: fn($value) => bcdiv($value, 100, 2)
         );
     }
 
     protected function prizeAmount(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => bcmul($value, 100, 0),
-            get: fn ($value) => bcdiv($value, 100, 2)
+            set: fn($value) => bcmul($value, 100, 0),
+            get: fn($value) => bcdiv($value, 100, 2)
         );
     }
 
     protected function commission(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => bcmul($value, 100, 0),
-            get: fn ($value) => bcdiv($value, 100, 2)
+            set: fn($value) => bcmul($value, 100, 0),
+            get: fn($value) => bcdiv($value, 100, 2)
         );
     }
 
     protected function profit(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => bcmul($value, 100, 0),
-            get: fn ($value) => bcdiv($value, 100, 2)
+            set: fn($value) => bcmul($value, 100, 0),
+            get: fn($value) => bcdiv($value, 100, 2)
         );
     }
 
     protected function qtyWinnerBets(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ticketDetails()->where('won', true)->count()
+            get: fn($value) => $this->ticketDetails()->where('won', true)->count()
         );
     }
 
