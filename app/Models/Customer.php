@@ -118,7 +118,7 @@ class Customer extends Model implements \OwenIt\Auditing\Contracts\Auditable
         'consortium_id' => 'integer',
         'birth_date' => 'date',
         'banned_at' => 'datetime',
-        'data' => 'json',
+        'data' => 'array',
     ];
 
 

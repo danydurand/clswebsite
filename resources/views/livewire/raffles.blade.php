@@ -155,30 +155,31 @@
 
                         <flux:table.cell class="text-center">
                             <div x-data="{
-                                    remaining: '',
-                                    targetTime: null,
-                                    init() {
-                                        const raffleDate = '{{ $raffle->raffle_date->format('Y-m-d') }}';
-                                        const stopTime = '{{ $raffle->stop_sale_time }}';
-                                        this.targetTime = new Date(raffleDate + ' ' + stopTime).getTime();
-                                        this.updateRemaining();
-                                        setInterval(() => this.updateRemaining(), 1000);
-                                    },
-                                    updateRemaining() {
-                                        const now = new Date().getTime();
-                                        const distance = this.targetTime - now;
+                                        remaining: '',
+                                        targetTime: null,
+                                        init() {
+                                            const raffleDate = '{{ $raffle->raffle_date->format('Y-m-d') }}';
+                                            const stopTime = '{{ $raffle->stop_sale_time }}';
+                                            this.targetTime = new Date(raffleDate + ' ' + stopTime).getTime();
+                                            this.updateRemaining();
+                                            setInterval(() => this.updateRemaining(), 1000);
+                                        },
+                                        updateRemaining() {
+                                            const now = new Date().getTime();
+                                            const distance = this.targetTime - now;
 
-                                        if (distance < 0) {
-                                            this.remaining = '{{ __('Expired') }}';
-                                            return;
+                                            if (distance < 0) {
+                                                this.remaining = '{{ __('Expired') }}';
+                                                return;
+                                            }
+
+                                            const hours = Math.floor(distance / (1000 * 60 * 60));
+                                            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                                            this.remaining = String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
                                         }
-
-                                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                                        this.remaining = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
-                                    }
-                                }" x-text="remaining" class="font-mono text-sm font-semibold"
+                                    }" x-text="remaining" class="font-mono text-sm font-semibold"
                                 :class="remaining === '{{ __('Expired') }}' ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'">
                             </div>
                         </flux:table.cell>

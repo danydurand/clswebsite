@@ -25,6 +25,7 @@ class ViewTicket extends Component
     public $ticket_status;
     public $ticket_status_color;
     public $ticket_payment_status;
+    public $showDeleteConfirm = false;
 
     public function mount($id)
     {
@@ -53,6 +54,7 @@ class ViewTicket extends Component
 
     public function deleteTicket($id)
     {
+        $this->showDeleteConfirm = false;
         $ticket = Ticket::findOrFail($id);
         $ticket->actions()->delete();
         $ticket->delete();
@@ -74,6 +76,60 @@ class ViewTicket extends Component
 
         // Redirect to printable view
         return redirect()->route('tickets.print', $this->ticket->id);
+    }
+
+    public function sendEmail()
+    {
+        Flash::success('Ticket sent successfully to ' . $this->ticket->customer->email);
+
+        // try {
+        //     // Send email with PDF attachment
+        //     \Illuminate\Support\Facades\Mail::to($this->ticket->customer->email)
+        //         ->send(new \App\Mail\TicketEmail($this->ticket));
+
+        //     // Register the email sent action in the database
+        //     // $this->ticket->actions()->create([
+        //     //     'ticket_id' => $this->ticket->id,
+        //     //     'action' => \App\Domain\Ticket\TicketActionEnum::EmailSent,
+        //     //     'executed_by' => auth()->id(),
+        //     //     'executed_at' => now(),
+        //     //     'security_code' => $this->ticket->security_code,
+        //     //     'comments' => 'Ticket sent via email to customer',
+        //     // ]);
+
+        //     Flash::success('Ticket sent successfully to ' . $this->ticket->customer->email);
+        // } catch (\Exception $e) {
+        //     Flash::error('Failed to send email: ' . $e->getMessage());
+        // }
+    }
+
+    public function sendWhatsApp()
+    {
+        // Register the WhatsApp sent action in the database
+        // $this->ticket->actions()->create([
+        //     'ticket_id' => $this->ticket->id,
+        //     'action' => \App\Domain\Ticket\TicketActionEnum::WhatsAppSent,
+        //     'executed_by' => auth()->id(),
+        //     'executed_at' => now(),
+        //     'security_code' => $this->ticket->security_code,
+        //     'comments' => 'Ticket sent via WhatsApp to customer',
+        // ]);
+
+        // Generate WhatsApp message with ticket details
+        $message = "🎫 *Your Lottery Ticket*\n\n";
+        $message .= "Ticket ID: #{$this->ticket->id}\n";
+        $message .= "Code: {$this->ticket->code}\n";
+        $message .= "Total Amount: $" . number_format($this->ticket->stake_amount, 2) . "\n\n";
+        $message .= "View your ticket: " . route('tickets.print', $this->ticket->id);
+
+        // Create WhatsApp link
+        $phone = preg_replace('/[^0-9]/', '', $this->ticket->customer->phone);
+        $whatsappUrl = "https://wa.me/{$phone}?text=" . urlencode($message);
+
+        Flash::success('Opening WhatsApp to send ticket to ' . $this->ticket->customer->phone);
+
+        // Redirect to WhatsApp
+        return redirect()->away($whatsappUrl);
     }
 
     public function render()

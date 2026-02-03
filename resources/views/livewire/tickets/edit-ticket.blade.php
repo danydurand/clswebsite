@@ -15,36 +15,49 @@
 
     <!-- Action Buttons -->
     <div class="mb-6 flex flex-wrap gap-3">
-        <button wire:click="back" class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2.5 font-semibold text-white shadow-md transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-lg">
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-            </svg>
+        <x-ui.loading-button 
+            action="back" 
+            color="blue" 
+            gradient="true"
+            :icon="'<path d=\'M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z\' />'">
             {{ __('Back to Tickets') }}
-        </button>
+        </x-ui.loading-button>
         
-        <button wire:click="viewTicket({{ $ticket->id }})" class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 font-semibold text-white shadow-md transition-all hover:bg-indigo-700 hover:shadow-lg">
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-            </svg>
+        <x-ui.loading-button 
+            action="viewTicket({{ $ticket->id }})" 
+            color="blue"
+            :icon="'<path d=\'M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z\' />'">
             {{ __('View') }}
-        </button>
+        </x-ui.loading-button>
         
-        <button wire:click="howToPlay({{ $ticket->id }})" class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 font-semibold text-white shadow-md transition-all hover:bg-emerald-700 hover:shadow-lg">
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-            </svg>
+        <x-ui.loading-button 
+            action="howToPlay({{ $ticket->id }})" 
+            color="green"
+            :icon="'<path d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z\' />'">
             {{ __('How to Play?') }}
-        </button>
+        </x-ui.loading-button>
 
         <div class="ml-auto">
-            <button wire:click="deleteTicket({{ $ticket->id }})" class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-red-500 to-pink-600 px-4 py-2.5 font-semibold text-white shadow-md transition-all hover:from-red-600 hover:to-pink-700 hover:shadow-lg">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                </svg>
+            <x-ui.loading-button 
+                action="$set('showDeleteConfirm', true)" 
+                color="red" 
+                gradient="true"
+                :icon="'<path d=\'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z\' />'">
                 {{ __('Delete Ticket') }}
-            </button>
+            </x-ui.loading-button>
         </div>
     </div>
+
+    <!-- Delete Confirmation Dialog -->
+    <x-ui.confirm-dialog
+        wire:model="showDeleteConfirm"
+        type="danger"
+        title="{{ __('Delete Ticket?') }}"
+        message="{{ __('Are you sure you want to delete this ticket? This action cannot be undone and all associated bets will be permanently removed.') }}"
+        confirm-text="{{ __('Yes, Delete') }}"
+        cancel-text="{{ __('Cancel') }}"
+        confirm-action="deleteTicket({{ $ticket->id }})"
+    />
 
     {{-- Ticket Details Section --}}
     <div class="space-y-6">
@@ -119,14 +132,15 @@
                     <flux:input wire:model="stake_amount" label="{{ __('Stake Amount') }}" placeholder="{{ __('Stake amount') }}" />
                 </div>
                 <div class="flex items-end min-w-[120px]">
-                    <button wire:click="addBet" class="w-full rounded-lg bg-gradient-to-r from-teal-500 to-cyan-600 px-4 py-2.5 font-semibold text-white shadow-md transition-all hover:from-teal-600 hover:to-cyan-700 hover:shadow-lg">
-                        <div class="flex items-center justify-center gap-2">
-                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                            </svg>
-                            {{ __('Add Bet') }}
-                        </div>
-                    </button>
+                    <x-ui.loading-button 
+                        action="addBet" 
+                        color="green"
+                        gradient="true"
+                        loading-text="{{ __('Adding...') }}"
+                        class="w-full"
+                        :icon="'<path d=\'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\' />'">
+                        {{ __('Add Bet') }}
+                    </x-ui.loading-button>
                 </div>
             </div>
         </div>

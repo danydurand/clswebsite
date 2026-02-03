@@ -37,6 +37,7 @@ class EditTicket extends Component
     public $ticket_status_color;
     public $ticket_payment_status;
     public $editing = false;
+    public $showDeleteConfirm = false;
 
     public function mount($id)
     {
@@ -121,6 +122,7 @@ class EditTicket extends Component
 
     public function deleteTicket($id)
     {
+        $this->showDeleteConfirm = false;
         $ticket = Ticket::findOrFail($id);
         $ticket->delete();
         Flash::success('Ticket deleted successfully');

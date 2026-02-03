@@ -205,11 +205,11 @@ class CreateTicket extends Component
             return;
         }
 
-        // info('Validation: ' . $validation);
+        info('Validation: ' . print_r($validation->getData('games'), true));
 
         $betNumbers = $validation->getData('betNumbers');
-        // $game_id = $validation->getData('games')[0]['game_id'];
-        $game_id = $validation->getData('game_id');
+        $game_id = $validation->getData('games')[0]['game_id'];
+        // $game_id = $validation->getData('game_id');
         $raffle_id = $validation->getData('validRaffles');
 
         $user = Auth::user();
