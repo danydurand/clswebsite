@@ -1,0 +1,15 @@
+# FilamentPHP v3 Development Standards
+
+## Model Guidelines
+
+- **Finder methods:** Add a findBy{FieldName} static method for each field that has a unique attribute in the migration.
+- **Scopes:** Add a scope method for each field that has a index attribute in the migration, except for the fields that have a unique attribute.
+- **Mutators:** Add a mutator method for each string applying "up" and "length" methods (those are global helpers).
+    - The "length" must be according to string size declared in the migration.
+    - Email fields do not need "up" method, only the "length" one.
+    - If the field is nullable, consider adding a null check in the mutator method. Take the `admin_feedback` field from the `Deposit` model as an example.
+- **Source code sections:** The model file has several sections: 1) fillable, 2) casts, 3) finders, 4) scopes, 5) mutators, 6) attributes and 7) relationships. Look the Bank model for a reference.
+- **Integer fields:** For any integer field which name suggests it should be a float like: amount, charge, rate, final_amount, btc_amount, use the mutator method to convert it to float. Look at the Ticket model for a reference (profit is an example).
+- **Traits:**
+    - If the model has `hasMany` relationship, add the `HasRelatedRecords` trait to the model.
+    - If the model has `is_active` field, add the `HandleActive` trait to the model.

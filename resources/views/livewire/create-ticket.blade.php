@@ -1,6 +1,6 @@
 <div>
     <flux:modal name="create-ticket" class="md:w-[800px]">
-        <div class="space-y-6">
+        <form class="space-y-6">
             <!-- Modal Header -->
             <div class="relative overflow-hidden rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 p-6 -m-6 mb-6">
                 <div class="relative z-10">
@@ -17,7 +17,8 @@
             <!-- Lottery and Raffle Selection -->
             <div class="rounded-lg bg-gray-50 p-4 dark:bg-zinc-800/50">
                 <h4 class="mb-3 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                    {{ __('Select Lottery & Raffle') }}</h4>
+                    {{ __('Select Lottery & Raffle') }}
+                </h4>
                 <div class="flex w-full gap-4">
                     <div class="w-1/2">
                         <flux:select wire:model.live="lottery_id" label="{{ __('Lottery') }}"
@@ -88,6 +89,6 @@
                     {{ __('Save') }}
                 </button>
             </div>
-        </div>
+        </form>
     </flux:modal>
 </div>

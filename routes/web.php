@@ -53,6 +53,10 @@ Route::middleware(['auth'])->group(function () {
         return view('tickets.online-ticket-pdf', compact('ticket'));
     })->name('tickets.print');
 
+    // Deposit routes
+    Route::get('deposits', \App\Livewire\Deposits::class)->name('deposits.index');
+    Route::get('deposits/create', \App\Livewire\CreateDeposit::class)->name('deposits.create');
+
 });
 
 Route::middleware(['auth'])->group(function () {
