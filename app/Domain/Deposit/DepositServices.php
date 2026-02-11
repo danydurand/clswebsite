@@ -192,6 +192,51 @@ class DepositServices
         return $amount >= $gatewayCurrency->min_amount && $amount <= $gatewayCurrency->max_amount;
     }
 
+    /**
+     * Actualiza un depósito existente
+     * 
+     * Solo permite actualizar depósitos en estado PENDING.
+     * Recalcula las comisiones si el monto cambia.
+     *
+     * @param Deposit $deposit Depósito a actualizar
+     * @param array $data Datos a actualizar
+     * @return Deposit
+     * @throws \Exception Si el depósito no está en estado PENDING
+     */
+    public static function updateDeposit(Deposit $deposit, array $data): Deposit
+    {
+        // Validar que el estado sea PENDING
+        if ($deposit->status !== DepositStatusEnum::Pending) {
+            throw new \Exception(__('Only pending deposits can be updated'));
+        }
+
+        // Si el monto cambió, recalcular comisiones
+        if (isset($data['amount']) && $data['amount'] != $deposit->amount) {
+            $gatewayCurrency = $deposit->gateway->gatewayCurrencies()->first();
+
+            if ($gatewayCurrency) {
+                $calculation = self::calculateFinalAmount($data['amount'], $gatewayCurrency);
+                $data['charge'] = $calculation['charge'];
+                $data['final_amount'] = $calculation['final_amount'];
+            }
+        }
+
+        // Si hay detalles del formulario, fusionarlos con los existentes
+        if (isset($data['detail'])) {
+            $existingDetail = $deposit->detail ?? [];
+            $data['detail'] = array_merge($existingDetail, $data['detail']);
+        }
+
+        // Actualizar el depósito
+        $deposit->update($data);
+
+        Log::info('Deposit updated', [
+            'deposit_id' => $deposit->id,
+            'updated_fields' => array_keys($data),
+        ]);
+
+        return $deposit->fresh();
+    }
 
 
     /**
