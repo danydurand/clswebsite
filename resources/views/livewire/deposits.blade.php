@@ -64,7 +64,7 @@
 
         {{-- Manual Deposit --}}
         <a href="{{ route('deposits.manual') }}" wire:navigate
-            class="group relative inline-flex overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-left shadow-lg transition-all hover:shadow-xl hover:scale-105">
+            class="group relative inline-flex overflow-hidden rounded-xl bg-blue-600 p-6 text-left shadow-lg transition-all hover:shadow-xl hover:scale-105">
             <div class="relative z-10 flex items-center gap-4">
                 <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm">
                     <svg class="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -77,8 +77,7 @@
                     <p class="text-sm text-blue-100">{{ __('Bank transfer or cash deposit') }}</p>
                 </div>
             </div>
-            <div
-                class="absolute inset-0 bg-gradient-to-r from-blue-700 to-indigo-700 opacity-0 transition-opacity group-hover:opacity-100">
+            <div class="absolute inset-0 bg-blue-700 opacity-0 transition-opacity group-hover:opacity-100">
             </div>
         </a>
     </div>

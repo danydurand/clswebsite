@@ -1,4 +1,27 @@
-<div>
+<div class="w-full">
+    {{-- Gradient Header --}}
+    <div class="relative mb-8 overflow-hidden rounded-xl bg-blue-600 p-8 shadow-lg">
+        <div class="relative z-10 flex items-center justify-between">
+            <div>
+                <flux:heading size="xl" level="1" class="text-white">{{ __('Manual Deposit') }}</flux:heading>
+                <flux:subheading size="lg" class="text-blue-100">{{ __('Bank transfer or cash deposit') }}
+                </flux:subheading>
+            </div>
+            <a href="{{ route('deposits.index') }}" wire:navigate
+                class="rounded-lg bg-white/20 px-4 py-2 text-white backdrop-blur-sm transition-all hover:bg-white/30">
+                <svg class="inline h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                {{ __('Back to Deposits') }}
+            </a>
+        </div>
+
+        {{-- Decorative Elements --}}
+        <div class="absolute top-0 right-0 h-64 w-64 rounded-full bg-blue-500 opacity-20 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-blue-700 opacity-20 blur-3xl"></div>
+    </div>
+
     <flux:card>
         <flux:heading size="lg">{{ __('Manual Deposit') }}</flux:heading>
 
@@ -87,13 +110,13 @@
                 <div>
                     <flux:label>{{ __('Upload Payment Proof') }} <span class="text-red-500">*</span></flux:label>
                     <input type="file" wire:model="proof_file" accept="image/*,application/pdf" class="block w-full text-sm text-zinc-500
-                                file:mr-4 file:py-2 file:px-4
-                                file:rounded-md file:border-0
-                                file:text-sm file:font-semibold
-                                file:bg-zinc-100 file:text-zinc-700
-                                hover:file:bg-zinc-200
-                                dark:file:bg-zinc-800 dark:file:text-zinc-300
-                                dark:hover:file:bg-zinc-700" />
+                                            file:mr-4 file:py-2 file:px-4
+                                            file:rounded-md file:border-0
+                                            file:text-sm file:font-semibold
+                                            file:bg-zinc-100 file:text-zinc-700
+                                            hover:file:bg-zinc-200
+                                            dark:file:bg-zinc-800 dark:file:text-zinc-300
+                                            dark:hover:file:bg-zinc-700" />
                     <flux:text variant="muted" class="mt-1">
                         {{ __('Accepted formats: JPG, PNG, PDF. Max size: 2MB') }}
                     </flux:text>
