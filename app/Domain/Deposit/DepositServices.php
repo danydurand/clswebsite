@@ -111,6 +111,73 @@ class DepositServices
     }
 
     /**
+     * Crea un depósito manual con comprobante
+     * 
+     * Crea un depósito manual que requiere aprobación del administrador.
+     * Incluye el archivo de comprobante y los datos del formulario dinámico.
+     *
+     * @param Customer $customer Cliente que realiza el depósito
+     * @param GatewayCurrency $gatewayCurrency Gateway seleccionado
+     * @param float $amount Monto del depósito
+     * @param array $formData Datos del formulario dinámico
+     * @param \Illuminate\Http\UploadedFile|null $proofFile Archivo de comprobante
+     * @return Deposit
+     * @throws \Exception Si hay un error al crear el depósito
+     */
+    public static function createManualDeposit(
+        Customer $customer,
+        GatewayCurrency $gatewayCurrency,
+        float $amount,
+        array $formData,
+        $proofFile = null
+    ): Deposit {
+        // Calcular comisiones y monto final
+        $calculation = self::calculateFinalAmount($amount, $gatewayCurrency);
+
+        // Guardar archivo de comprobante si existe
+        $proofPath = null;
+        if ($proofFile) {
+            $proofPath = $proofFile->store('deposit-proofs', 'public');
+        }
+
+        // Crear el depósito con estado Pending
+        $deposit = Deposit::create([
+            'customer_id' => $customer->id,
+            'gateway_id' => $gatewayCurrency->gateway_id,
+            'amount' => $amount,
+            'charge' => $calculation['charge'],
+            'rate' => $gatewayCurrency->rate ?? 1.0,
+            'final_amount' => $calculation['final_amount'],
+            'trx' => self::generateCode(),
+            'deposit_date' => now(),
+            'status' => DepositStatusEnum::Pending,
+            'from_api' => 0,
+            'payment_try' => 0,
+            'detail' => [
+                'gateway_name' => $gatewayCurrency->gateway->name,
+                'currency' => $gatewayCurrency->currency,
+                'symbol' => $gatewayCurrency->symbol,
+                'created_by' => $customer->name,
+                'proof_file' => $proofPath,
+                'form_data' => $formData,
+                'submitted_at' => now()->toDateTimeString(),
+            ],
+        ]);
+
+        Log::info('Manual deposit created', [
+            'deposit_id' => $deposit->id,
+            'customer_id' => $customer->id,
+            'amount' => $amount,
+            'trx' => $deposit->trx,
+            'has_proof' => $proofFile !== null,
+        ]);
+
+        // TODO: Notificar al administrador
+
+        return $deposit;
+    }
+
+    /**
      * Valida que el monto esté dentro de los límites del gateway
      * 
      * Verifica que el monto ingresado esté entre el mínimo y máximo
@@ -125,134 +192,7 @@ class DepositServices
         return $amount >= $gatewayCurrency->min_amount && $amount <= $gatewayCurrency->max_amount;
     }
 
-    /**
-     * Procesa un depósito exitoso (actualiza saldo del cliente)
-     * 
-     * Actualiza el estado del depósito a "Success", incrementa el saldo
-     * del cliente, y crea una transacción financiera para el registro.
-     *
-     * @param Deposit $deposit Depósito a procesar
-     * @return void
-     * @throws \Exception Si hay un error al procesar el depósito
-     */
-    public static function processSuccessfulDeposit(Deposit $deposit): void
-    {
-        if ($deposit->status === DepositStatusEnum::Success) {
-            throw new \Exception('Deposit already processed');
-        }
 
-        // Actualizar estado del depósito
-        $deposit->update(['status' => DepositStatusEnum::Success]);
-
-        // Actualizar saldo del cliente
-        $customer = $deposit->customer;
-        $customer->balance += $deposit->amount;
-        $customer->save();
-
-        // Crear transacción financiera
-        FinancialTransaction::create([
-            'customer_id' => $customer->id,
-            'trx_type' => TrxTypeEnum::Deposit->value,
-            'amount' => $deposit->amount,
-            'post_balance' => $customer->balance,
-            'charge' => $deposit->charge,
-            'trx' => $deposit->trx,
-            'details' => 'Deposit approved - ' . $deposit->gateway->name,
-        ]);
-
-        Log::info('Deposit processed successfully', [
-            'deposit_id' => $deposit->id,
-            'customer_id' => $customer->id,
-            'amount' => $deposit->amount,
-            'new_balance' => $customer->balance,
-        ]);
-
-        // TODO: Enviar notificación al cliente
-    }
-
-    /**
-     * Rechaza un depósito
-     * 
-     * Actualiza el estado del depósito a "Reject" y guarda el
-     * motivo del rechazo en el campo admin_feedback.
-     *
-     * @param Deposit $deposit Depósito a rechazar
-     * @param string $reason Razón del rechazo
-     * @return void
-     */
-    public static function rejectDeposit(Deposit $deposit, string $reason): void
-    {
-        $deposit->update([
-            'status' => DepositStatusEnum::Reject,
-            'admin_feedback' => $reason,
-        ]);
-
-        Log::info('Deposit rejected', [
-            'deposit_id' => $deposit->id,
-            'customer_id' => $deposit->customer_id,
-            'reason' => $reason,
-        ]);
-
-        // TODO: Enviar notificación al cliente
-    }
-
-    /**
-     * Consulta los registros de depósitos según el tipo de usuario
-     * 
-     * Filtra los depósitos según los permisos del usuario autenticado.
-     *
-     * @param User $user Usuario autenticado
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public static function queryRecords($user)
-    {
-        if (
-            in_array($user->type, [
-                UserTypeEnum::Master->value,
-            ])
-        ) {
-            return Deposit::query();
-        }
-        if (
-            in_array($user->type, [
-                UserTypeEnum::Admin->value,
-            ])
-        ) {
-            return Deposit::webSale();
-        }
-        if (
-            in_array($user->type, [
-                UserTypeEnum::Owner->value,
-                UserTypeEnum::Secretary->value,
-            ])
-        ) {
-            return Deposit::query()
-                ->byConsortium($user->consortium_id);
-
-        }
-        if (
-            in_array($user->type, [
-                UserTypeEnum::Supervisor->value,
-            ])
-        ) {
-            return Deposit::query()
-                ->bySupervisor($user->id);
-
-        }
-        if (
-            in_array($user->type, [
-                UserTypeEnum::Banker->value,
-            ])
-        ) {
-            $bankerId = Auth::user()->banker_id;
-            $bankIds = Bank::where('group_id', $bankerId)->pluck('id')->toArray();
-            return Deposit::query()
-                ->whereIn('bank_id', $bankIds);
-
-        }
-        return Deposit::query()->where('id', '<', 0);
-
-    }
 
     /**
      * Genera un código único para el depósito

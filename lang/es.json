@@ -213,5 +213,21 @@
     "Amount must be between :min and :max": "El monto debe estar entre :min y :max",
     "Deposit created successfully": "Depósito creado exitosamente",
     "Error creating deposit: :error": "Error al crear el depósito: :error",
-    "Access denied. This portal is only for customers.": "Acceso denegado. Este portal es solo para clientes."
+    "Access denied. This portal is only for customers.": "Acceso denegado. Este portal es solo para clientes.",
+    
+    "Manual Deposit": "Depósito Manual",
+    "Automatic Deposit": "Depósito Automático",
+    "Instant payment processing": "Procesamiento de pago instantáneo",
+    "Bank transfer or cash deposit": "Transferencia bancaria o depósito en efectivo",
+    "Payment Method": "Método de Pago",
+    "Select a payment method": "Selecciona un método de pago",
+    "Payment Instructions": "Instrucciones de Pago",
+    "Payment Information": "Información de Pago",
+    "Payment Proof": "Comprobante de Pago",
+    "Upload Payment Proof": "Subir Comprobante de Pago",
+    "Accepted formats: JPG, PNG, PDF. Max size: 2MB": "Formatos aceptados: JPG, PNG, PDF. Tamaño máximo: 2MB",
+    "File selected": "Archivo seleccionado",
+    "Submit Deposit": "Enviar Depósito",
+    "Manual deposit submitted successfully. Awaiting admin approval.": "Depósito manual enviado exitosamente. Esperando aprobación del administrador.",
+    "Total to Pay": "Total a Pagar"
 }

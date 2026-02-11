@@ -56,6 +56,7 @@ Route::middleware(['auth'])->group(function () {
     // Deposit routes
     Route::get('deposits', \App\Livewire\Deposits::class)->name('deposits.index');
     Route::get('deposits/create', \App\Livewire\CreateDeposit::class)->name('deposits.create');
+    Route::get('deposits/manual', \App\Livewire\CreateManualDeposit::class)->name('deposits.manual');
 
 });
 
