@@ -1,6 +1,6 @@
 <div class="w-full">
     {{-- Gradient Header --}}
-    <div class="relative mb-8 overflow-hidden rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 p-8 shadow-lg">
+    <div class="relative mb-4 overflow-hidden rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 p-8 shadow-lg">
         <div class="relative z-10">
             <flux:heading size="xl" level="1" class="text-white">{{ __('Deposits') }}</flux:heading>
             <flux:subheading size="lg" class="text-green-100">{{ __('Manage your account deposits') }}
@@ -80,6 +80,98 @@
             <div class="absolute inset-0 bg-blue-700 opacity-0 transition-opacity group-hover:opacity-100">
             </div>
         </a>
+    </div>
+
+    {{-- Filters Section (Collapsible) --}}
+    <div x-data="{ filtersOpen: false }"
+        class="mb-6 rounded-xl bg-white shadow-md dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700">
+        {{-- Toggle Button --}}
+        <button @click="filtersOpen = !filtersOpen"
+            class="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors rounded-xl">
+            <div class="flex items-center gap-2">
+                <svg class="h-5 w-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                <span class="font-medium text-gray-700 dark:text-gray-300">{{ __('Filters') }}</span>
+                @if($statusFilter !== 'all' || $search || $dateFrom || $dateTo || $gatewayFilter !== 'all')
+                    <span
+                        class="inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:text-blue-200">
+                        {{ __('Active') }}
+                    </span>
+                @endif
+            </div>
+            <svg class="h-5 w-5 text-gray-600 dark:text-gray-400 transition-transform duration-200"
+                :class="{ 'rotate-180': filtersOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+
+        {{-- Filters Content --}}
+        <div x-show="filtersOpen" x-collapse class="border-t border-gray-200 dark:border-zinc-700">
+            <div class="p-6">
+                {{-- First Row: All Filters --}}
+                <div class="grid grid-cols-5 gap-4 mb-4">
+                    {{-- Status Filter --}}
+                    <div>
+                        <flux:label>{{ __('Filter by Status') }}</flux:label>
+                        <flux:select wire:model.live="statusFilter">
+                            <option value="all">{{ __('All Statuses') }}</option>
+                            <option value="initiate">{{ __('Initiate') }}</option>
+                            <option value="pending">{{ __('Pending') }}</option>
+                            <option value="success">{{ __('Success') }}</option>
+                            <option value="reject">{{ __('Reject') }}</option>
+                        </flux:select>
+                    </div>
+
+                    {{-- Gateway Filter --}}
+                    <div>
+                        <flux:label>{{ __('Filter by Gateway') }}</flux:label>
+                        <flux:select wire:model.live="gatewayFilter">
+                            <option value="all">{{ __('All Gateways') }}</option>
+                            @foreach($this->usedGateways as $gateway)
+                                <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
+                            @endforeach
+                        </flux:select>
+                    </div>
+
+                    {{-- Transaction Code Search --}}
+                    <div>
+                        <flux:label>{{ __('Search by Transaction Code') }}</flux:label>
+                        <flux:input type="text" wire:model.live.debounce.300ms="search"
+                            placeholder="{{ __('Enter transaction code...') }}" icon="magnifying-glass" />
+                    </div>
+
+                    {{-- Date From --}}
+                    <div>
+                        <flux:label>{{ __('Date From') }}</flux:label>
+                        <flux:input type="date" wire:model.live="dateFrom" />
+                    </div>
+
+                    {{-- Date To --}}
+                    <div>
+                        <flux:label>{{ __('Date To') }}</flux:label>
+                        <flux:input type="date" wire:model.live="dateTo" />
+                    </div>
+
+                </div>
+
+                {{-- Second Row: Clear Filters Button (Centered) --}}
+                @if($statusFilter !== 'all' || $search || $dateFrom || $dateTo || $gatewayFilter !== 'all')
+                    <div class="flex justify-center">
+                        <button wire:click="clearFilters"
+                            class="inline-flex items-center justify-center rounded-lg bg-gray-600 px-4 py-2.5 text-white font-medium transition-colors hover:bg-gray-700">
+                            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            {{ __('Clear Filters') }}
+                        </button>
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
 
     {{-- Deposits Table --}}
@@ -163,7 +255,7 @@
                                     </svg>
                                 </a>
 
-                                {{-- Edit Button (only for PENDING deposits) --}}
+                                {{-- Edit Button (disabled for non-PENDING deposits) --}}
                                 @if($deposit->status === App\Domain\Deposit\DepositStatusEnum::Pending)
                                     <a href="{{ route('deposits.edit', $deposit->id) }}" wire:navigate
                                         class="inline-flex items-center justify-center rounded-lg bg-green-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-green-700"
@@ -173,6 +265,15 @@
                                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                         </svg>
                                     </a>
+                                @else
+                                    <button disabled
+                                        class="inline-flex items-center justify-center rounded-lg bg-gray-400 px-3 py-1.5 text-sm font-medium text-white cursor-not-allowed opacity-50"
+                                        title="{{ __('Cannot edit - Deposit is not pending') }}">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        </svg>
+                                    </button>
                                 @endif
                             </div>
                         </flux:table.cell>
@@ -185,8 +286,15 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                                 </svg>
-                                <p class="font-medium">{{ __('No deposits yet') }}</p>
-                                <p class="text-sm mt-1">{{ __('Create your first deposit to get started') }}</p>
+                                @if($statusFilter !== 'all' || $search || $dateFrom || $dateTo || $gatewayFilter !== 'all')
+                                    <p class="font-medium">{{ __('No deposits found matching your filters') }}</p>
+                                    <button wire:click="clearFilters" class="mt-2 text-sm text-blue-600 hover:underline">
+                                        {{ __('Clear filters to see all deposits') }}
+                                    </button>
+                                @else
+                                    <p class="font-medium">{{ __('No deposits yet') }}</p>
+                                    <p class="text-sm mt-1">{{ __('Create your first deposit to get started') }}</p>
+                                @endif
                             </div>
                         </flux:table.cell>
                     </flux:table.row>
@@ -194,4 +302,3 @@
             </flux:table.rows>
         </flux:table>
     </div>
-</div>

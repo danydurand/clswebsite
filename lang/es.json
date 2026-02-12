@@ -253,5 +253,21 @@
     "Download Payment Proof": "Descargar Comprobante de Pago",
     "View File": "Ver Archivo",
     "Remove": "Eliminar",
-    "Uploading...": "Subiendo..."
+    "Uploading...": "Subiendo...",
+    "Filter by Status": "Filtrar por Estado",
+    "All Statuses": "Todos los Estados",
+    "Search by Transaction Code": "Buscar por Código de Transacción",
+    "Enter transaction code...": "Ingrese código de transacción...",
+    "Clear Filters": "Limpiar Filtros",
+    "No deposits found matching your filters": "No se encontraron depósitos que coincidan con sus filtros",
+    "Clear filters to see all deposits": "Limpiar filtros para ver todos los depósitos",
+    "Upload Payment Proof": "Subir Comprobante de Pago",
+    "Accepted formats: JPG, PNG, PDF. Max size: 2MB": "Formatos aceptados: JPG, PNG, PDF. Tamaño máximo: 2MB",
+    "Filter by Gateway": "Filtrar por Gateway",
+    "All Gateways": "Todos los Gateways",
+    "Date From": "Fecha Desde",
+    "Date To": "Fecha Hasta",
+    "Filters": "Filtros",
+    "Active": "Activos",
+    "Cannot edit - Deposit is not pending": "No se puede editar - El depósito no está pendiente"
 }

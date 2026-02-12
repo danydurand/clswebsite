@@ -118,6 +118,11 @@ class Gateway extends Model
         return $this->hasMany(GatewayCurrency::class);
     }
 
+    public function deposits(): HasMany
+    {
+        return $this->hasMany(Deposit::class);
+    }
+
     public function form(): BelongsTo
     {
         return $this->belongsTo(Form::class);
