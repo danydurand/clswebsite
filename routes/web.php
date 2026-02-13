@@ -42,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('raffles', Raffles::class)->name('raffles');
     Route::get('events', Events::class)->name('events');
+    Route::get('casino', \App\Livewire\Casino::class)->name('casino');
     Route::get('bets', Bets::class)->name('bets');
     Route::get('tickets', Tickets::class)->name('tickets.index');
     Route::get('tickets/create', CreateTicket::class)->name('tickets.create');
