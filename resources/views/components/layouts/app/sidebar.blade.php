@@ -63,7 +63,8 @@
                         <div class="flex-1 text-left">
                             <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ auth()->user()->name }}
                             </div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">{{ auth()->user()->email }}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">
+                                {{ Str::limit(auth()->user()->email, 20) }}</div>
                         </div>
                         <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
@@ -81,7 +82,8 @@
                             <div class="flex-1">
                                 <div class="font-semibold text-gray-900 dark:text-white">{{ auth()->user()->name }}
                                 </div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ auth()->user()->email }}</div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400">
+                                    {{ Str::limit(auth()->user()->email, 20) }}</div>
                             </div>
                         </div>
                     </div>

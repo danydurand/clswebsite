@@ -3,8 +3,8 @@
     @include('components.flash-message')
 
     {{-- Header --}}
-    <x-ui.list-header :title="__('My Tickets')" :buttonText="__('Buy a Lottery Ticket')" buttonRoute="#"
-        :showButton="false" />
+    <x-ui.list-header :title="__('My Tickets')" :subtitle="__('My lottery tickets')" gradientFrom="blue-600"
+        gradientTo="purple-600" subtitleColor="blue-100" decorColor1="blue-500" decorColor2="purple-500" />
 
     {{-- Create Ticket Button --}}
     <div class="mb-6">

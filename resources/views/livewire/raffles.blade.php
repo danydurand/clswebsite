@@ -1,44 +1,11 @@
 <div class="w-full">
-    <!-- Gradient Header -->
-    <div class="relative mb-8 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 shadow-lg">
-        <div class="relative z-10">
-            <flux:heading size="xl" level="1" class="text-white">{{ __('Lottery Games') }}</flux:heading>
-            <flux:subheading size="lg" class="text-blue-100">{{ __('Available draws where you can bet') }}
-            </flux:subheading>
-        </div>
+    {{-- Flash Messages --}}
+    @include('components.flash-message')
 
-        <!-- Decorative Elements -->
-        <div class="absolute top-0 right-0 h-64 w-64 rounded-full bg-blue-500 opacity-20 blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-purple-500 opacity-20 blur-3xl"></div>
-    </div>
-
-    {{-- Session Messages --}}
-    @session('success')
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-            class="fixed top-5 right-5 z-50 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 p-4 text-white shadow-xl"
-            role="alert">
-            <div class="flex items-center gap-2">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                </svg>
-                <p class="font-medium">{{ $value }}</p>
-            </div>
-        </div>
-    @endsession
-
-    @session('error')
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-            class="fixed top-5 right-5 z-50 rounded-lg bg-gradient-to-r from-red-500 to-pink-600 p-4 text-white shadow-xl"
-            role="alert">
-            <div class="flex items-center gap-2">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-                </svg>
-                <p class="font-medium">{{ $value }}</p>
-            </div>
-        </div>
-    @endsession
+    {{-- Header --}}
+    <x-ui.list-header :title="__('Lottery Games')" :subtitle="__('Available draws where you can bet')"
+        gradientFrom="blue-600" gradientTo="purple-600" subtitleColor="blue-100" decorColor1="blue-500"
+        decorColor2="purple-500" />
 
     {{-- Action Buttons --}}
     <div class="mb-6 grid gap-4 md:grid-cols-3">
@@ -155,31 +122,31 @@
 
                         <flux:table.cell class="text-center">
                             <div x-data="{
-                                        remaining: '',
-                                        targetTime: null,
-                                        init() {
-                                            const raffleDate = '{{ $raffle->raffle_date->format('Y-m-d') }}';
-                                            const stopTime = '{{ $raffle->stop_sale_time }}';
-                                            this.targetTime = new Date(raffleDate + ' ' + stopTime).getTime();
-                                            this.updateRemaining();
-                                            setInterval(() => this.updateRemaining(), 1000);
-                                        },
-                                        updateRemaining() {
-                                            const now = new Date().getTime();
-                                            const distance = this.targetTime - now;
+                                                    remaining: '',
+                                                    targetTime: null,
+                                                    init() {
+                                                        const raffleDate = '{{ $raffle->raffle_date->format('Y-m-d') }}';
+                                                        const stopTime = '{{ $raffle->stop_sale_time }}';
+                                                        this.targetTime = new Date(raffleDate + ' ' + stopTime).getTime();
+                                                        this.updateRemaining();
+                                                        setInterval(() => this.updateRemaining(), 1000);
+                                                    },
+                                                    updateRemaining() {
+                                                        const now = new Date().getTime();
+                                                        const distance = this.targetTime - now;
 
-                                            if (distance < 0) {
-                                                this.remaining = '{{ __('Expired') }}';
-                                                return;
-                                            }
+                                                        if (distance < 0) {
+                                                            this.remaining = '{{ __('Expired') }}';
+                                                            return;
+                                                        }
 
-                                            const hours = Math.floor(distance / (1000 * 60 * 60));
-                                            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                                            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                                                        const hours = Math.floor(distance / (1000 * 60 * 60));
+                                                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                                            this.remaining = String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
-                                        }
-                                    }" x-text="remaining" class="font-mono text-sm font-semibold"
+                                                        this.remaining = String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+                                                    }
+                                                }" x-text="remaining" class="font-mono text-sm font-semibold"
                                 :class="remaining === '{{ __('Expired') }}' ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'">
                             </div>
                         </flux:table.cell>

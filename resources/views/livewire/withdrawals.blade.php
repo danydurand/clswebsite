@@ -3,8 +3,9 @@
     @include('components.flash-message')
 
     {{-- Header --}}
-    <x-ui.list-header :title="__('Withdrawals')" :buttonText="__('New Withdrawal')"
-        :buttonRoute="route('withdrawals.create')" :showButton="$hasActiveMethods" />
+    <x-ui.list-header :title="__('Withdrawals')" :subtitle="__('Manage your withdrawal requests')"
+        gradientFrom="green-600" gradientTo="emerald-600" subtitleColor="green-100" decorColor1="green-500"
+        decorColor2="emerald-500" />
 
     {{-- Filters Section (Collapsible) --}}
     <div x-data="{ filtersOpen: false }"
@@ -174,8 +175,8 @@
                         <flux:table.cell>
                             <code
                                 class="rounded bg-gray-100 px-2 py-1 text-xs font-mono text-gray-800 dark:bg-zinc-800 dark:text-gray-200">
-                                                {{ $withdrawal->trx }}
-                                            </code>
+                                                    {{ $withdrawal->trx }}
+                                                </code>
                         </flux:table.cell>
 
                         {{-- Amount --}}

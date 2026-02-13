@@ -3,7 +3,8 @@
     @include('components.flash-message')
 
     {{-- Header --}}
-    <x-ui.list-header :title="__('Deposits')" :buttonText="__('New Deposit')" :buttonRoute="route('deposits.create')" />
+    <x-ui.list-header :title="__('Deposits')" :subtitle="__('Manage your account deposits')" gradientFrom="green-600"
+        gradientTo="emerald-600" subtitleColor="green-100" decorColor1="green-500" decorColor2="emerald-500" />
 
     {{-- Session Messages --}}
     @session('success')
