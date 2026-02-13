@@ -6,14 +6,13 @@
     </div>
 
     <!-- Coming Soon Card -->
-    <div class="flex items-center justify-center min-h-[60vh]">
-        <div class="w-full max-w-4xl">
+    <div class="flex items-center justify-center py-8">
+        <div class="w-full max-w-3xl">
             <!-- Image Container with Shadow and Rounded Corners -->
-            <div class="relative overflow-hidden rounded-2xl shadow-2xl mb-8">
+            <div class="relative overflow-hidden rounded-2xl shadow-2xl mb-6">
                 <img src="{{ asset('images/coming-soon/casino.png') }}" alt="{{ __('Casino Games Coming Soon') }}"
-                    class="w-full h-auto object-cover" />
+                    class="w-full object-cover" style="height: 400px;" />
             </div>
-
             <!-- Message Card -->
             <div
                 class="bg-white dark:bg-zinc-800 rounded-xl shadow-lg p-8 text-center border border-gray-200 dark:border-zinc-700">

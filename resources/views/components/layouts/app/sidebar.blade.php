@@ -46,10 +46,10 @@
             <x-ui.sidebar-nav-item :href="route('withdrawals')" icon="arrow-down-tray" :label="__('Withdrawals')"
                 :active="request()->routeIs('withdrawals*')" />
 
-            <x-ui.sidebar-nav-item :href="route('casino')" icon="sparkles" :label="__('Casino')"
+            <x-ui.sidebar-nav-item :href="route('casino')" icon="sparkles" :label="__('Casino Games')"
                 :active="request()->routeIs('casino')" />
 
-            <x-ui.sidebar-nav-item :href="route('events')" icon="trophy" :label="__('Events')"
+            <x-ui.sidebar-nav-item :href="route('events')" icon="trophy" :label="__('Sport Events')"
                 :active="request()->routeIs('events')" />
         </div>
 
