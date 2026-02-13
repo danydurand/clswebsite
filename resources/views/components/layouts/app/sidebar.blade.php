@@ -43,6 +43,9 @@
             <x-ui.sidebar-nav-item :href="route('deposits.index')" icon="banknotes" :label="__('Deposits')"
                 :active="request()->routeIs('deposits*')" />
 
+            <x-ui.sidebar-nav-item :href="route('withdrawals')" icon="arrow-down-tray" :label="__('Withdrawals')"
+                :active="request()->routeIs('withdrawals*')" />
+
             <x-ui.sidebar-nav-item :href="route('events')" icon="trophy" :label="__('Events')"
                 :active="request()->routeIs('events')" />
         </div>

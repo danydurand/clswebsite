@@ -29,23 +29,9 @@ class Form extends Model
     }
 
 
-    //-----------------
-    // Relationships
-    //-----------------
-
-    /**
-     * Gateways que usan este formulario
-     */
-    public function gateways(): HasMany
-    {
-        return $this->hasMany(Gateway::class, 'form_id');
-    }
-
-
     //-----------
     // Scopes
     //-----------
-
     public function scopeForDeposit($query)
     {
         return $query->where('act', 'deposit');
@@ -86,4 +72,20 @@ class Form extends Model
 
         return true;
     }
+
+    //-----------------
+    // Relationships
+    //-----------------
+
+    public function gateways(): HasMany
+    {
+        return $this->hasMany(Gateway::class, 'form_id');
+    }
+
+    public function withdrawMethods(): HasMany
+    {
+        return $this->hasMany(WithdrawMethod::class, 'form_id');
+    }
+
+
 }

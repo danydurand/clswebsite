@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\HasRelatedRecords;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class WithdrawMethod extends Model
@@ -24,6 +25,7 @@ class WithdrawMethod extends Model
         'percent_charge',
         'rate',
         'is_active',
+        'form_id',
         'currency',
         'description',
     ];
@@ -123,5 +125,10 @@ class WithdrawMethod extends Model
     public function withdrawals(): HasMany
     {
         return $this->hasMany(Withdrawal::class);
+    }
+
+    public function form(): BelongsTo
+    {
+        return $this->belongsTo(Form::class);
     }
 }

@@ -60,6 +60,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('deposits/{deposit}', \App\Livewire\ViewDeposit::class)->name('deposits.view');
     Route::get('deposits/{deposit}/edit', \App\Livewire\EditDeposit::class)->name('deposits.edit');
 
+    // Withdrawal routes
+    Route::get('withdrawals', \App\Livewire\Withdrawals::class)->name('withdrawals');
+    Route::get('withdrawals/create', \App\Livewire\CreateWithdrawal::class)->name('withdrawals.create');
+    Route::get('withdrawals/confirm/{trx}', \App\Livewire\ConfirmWithdrawal::class)->name('withdrawals.confirm');
+    Route::get('withdrawals/{id}', \App\Livewire\ViewWithdrawal::class)->name('withdrawals.view');
+
 });
 
 Route::middleware(['auth'])->group(function () {

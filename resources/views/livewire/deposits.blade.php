@@ -1,16 +1,9 @@
 <div class="w-full">
-    {{-- Gradient Header --}}
-    <div class="relative mb-4 overflow-hidden rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 p-8 shadow-lg">
-        <div class="relative z-10">
-            <flux:heading size="xl" level="1" class="text-white">{{ __('Deposits') }}</flux:heading>
-            <flux:subheading size="lg" class="text-green-100">{{ __('Manage your account deposits') }}
-            </flux:subheading>
-        </div>
+    {{-- Flash Messages --}}
+    @include('components.flash-message')
 
-        {{-- Decorative Elements --}}
-        <div class="absolute top-0 right-0 h-64 w-64 rounded-full bg-green-500 opacity-20 blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-emerald-500 opacity-20 blur-3xl"></div>
-    </div>
+    {{-- Header --}}
+    <x-ui.list-header :title="__('Deposits')" :buttonText="__('New Deposit')" :buttonRoute="route('deposits.create')" />
 
     {{-- Session Messages --}}
     @session('success')
