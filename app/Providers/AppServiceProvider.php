@@ -19,6 +19,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register event listeners for email verification
+        \Illuminate\Support\Facades\Event::listen(
+            \Illuminate\Auth\Events\Registered::class,
+            \App\Listeners\SendEmailVerificationNotification::class,
+        );
+
+        \Illuminate\Support\Facades\Event::listen(
+            \Illuminate\Auth\Events\Verified::class,
+            \App\Listeners\SendWelcomeEmail::class,
+        );
     }
 }

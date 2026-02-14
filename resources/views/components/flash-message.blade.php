@@ -1,7 +1,7 @@
 @php
-    $successMessages = session()->get('flash_success', []);
-    $errorMessages = session()->get('flash_error', []);
-    $warningMessages = session()->get('flash_warning', []);
+    $successMessages = session()->pull('flash_success', []);
+    $errorMessages = session()->pull('flash_error', []);
+    $warningMessages = session()->pull('flash_warning', []);
 @endphp
 
 {{-- Success Messages --}}
@@ -10,18 +10,14 @@
         $topPosition = 5 + ($index * 6); // 5rem base + 6rem spacing per message
         $successKey = 'success-' . $index . '-' . md5($message . now()->format('U.u'));
     @endphp
-    <div x-data="{ show: true }" 
-         x-show="show" 
-         x-init="setTimeout(() => show = false, 3000)"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 transform translate-x-full"
-         x-transition:enter-end="opacity-100 transform translate-x-0" 
-         x-transition:leave="transition ease-in duration-300"
-         x-transition:leave-start="opacity-100 transform translate-x-0"
-         x-transition:leave-end="opacity-0 transform translate-x-full" 
-         wire:key="{{ $successKey }}"
-         style="top: {{ $topPosition }}rem;"
-         class="fixed right-5 z-50 flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md border-l-4 border-green-500">
+    <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform translate-x-full"
+        x-transition:enter-end="opacity-100 transform translate-x-0" x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="opacity-100 transform translate-x-0"
+        x-transition:leave-end="opacity-0 transform translate-x-full" wire:key="{{ $successKey }}"
+        style="top: {{ $topPosition }}rem;"
+        class="fixed right-5 z-50 flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md border-l-4 border-green-500">
         <div class="flex items-center justify-center w-12 bg-green-500">
             <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -50,18 +46,14 @@
         $topPosition = 5 + ((count($successMessages) + $index) * 6); // Stack after success messages
         $errorKey = 'error-' . $index . '-' . md5($message . now()->format('U.u'));
     @endphp
-    <div x-data="{ show: true }" 
-         x-show="show" 
-         x-init="setTimeout(() => show = false, 3000)"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 transform translate-x-full"
-         x-transition:enter-end="opacity-100 transform translate-x-0" 
-         x-transition:leave="transition ease-in duration-300"
-         x-transition:leave-start="opacity-100 transform translate-x-0"
-         x-transition:leave-end="opacity-0 transform translate-x-full" 
-         wire:key="{{ $errorKey }}"
-         style="top: {{ $topPosition }}rem;"
-         class="fixed right-5 z-50 flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md border-l-4 border-red-500">
+    <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform translate-x-full"
+        x-transition:enter-end="opacity-100 transform translate-x-0" x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="opacity-100 transform translate-x-0"
+        x-transition:leave-end="opacity-0 transform translate-x-full" wire:key="{{ $errorKey }}"
+        style="top: {{ $topPosition }}rem;"
+        class="fixed right-5 z-50 flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md border-l-4 border-red-500">
         <div class="flex items-center justify-center w-12 bg-red-500">
             <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -91,18 +83,14 @@
         $topPosition = 5 + ((count($successMessages) + count($errorMessages) + $index) * 6); // Stack after success and error messages
         $warningKey = 'warning-' . $index . '-' . md5($message . now()->format('U.u'));
     @endphp
-    <div x-data="{ show: true }" 
-         x-show="show" 
-         x-init="setTimeout(() => show = false, 3000)"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 transform translate-x-full"
-         x-transition:enter-end="opacity-100 transform translate-x-0" 
-         x-transition:leave="transition ease-in duration-300"
-         x-transition:leave-start="opacity-100 transform translate-x-0"
-         x-transition:leave-end="opacity-0 transform translate-x-full" 
-         wire:key="{{ $warningKey }}"
-         style="top: {{ $topPosition }}rem;"
-         class="fixed right-5 z-50 flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md border-l-4 border-yellow-500">
+    <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform translate-x-full"
+        x-transition:enter-end="opacity-100 transform translate-x-0" x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="opacity-100 transform translate-x-0"
+        x-transition:leave-end="opacity-0 transform translate-x-full" wire:key="{{ $warningKey }}"
+        style="top: {{ $topPosition }}rem;"
+        class="fixed right-5 z-50 flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md border-l-4 border-yellow-500">
         <div class="flex items-center justify-center w-12 bg-yellow-500">
             <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

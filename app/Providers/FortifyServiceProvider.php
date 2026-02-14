@@ -55,6 +55,13 @@ class FortifyServiceProvider extends ServiceProvider
                     ]);
                 }
 
+                // Validar que el usuario haya verificado su correo electrónico
+                if (!$user->hasVerifiedEmail()) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'email' => [__('Please verify your email address before logging in.')],
+                    ]);
+                }
+
                 return $user;
             }
 

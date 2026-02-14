@@ -325,5 +325,38 @@
     "Casino Games Coming Soon": "Juegos de Casino Próximamente",
     "We're working hard to bring you the best casino gaming experience. Stay tuned!": "Estamos trabajando arduamente para traerte la mejor experiencia de juegos de casino. ¡Mantente atento!",
     "Sports Betting Coming Soon": "Apuestas Deportivas Próximamente",
-    "Get ready to bet on your favorite sports! Our sports betting platform will be available soon.": "¡Prepárate para apostar en tus deportes favoritos! Nuestra plataforma de apuestas deportivas estará disponible pronto."
+    "Get ready to bet on your favorite sports! Our sports betting platform will be available soon.": "¡Prepárate para apostar en tus deportes favoritos! Nuestra plataforma de apuestas deportivas estará disponible pronto.",
+    
+    "Verify Your Email Address": "Verifica Tu Dirección de Correo Electrónico",
+    "Hello": "Hola",
+    "Thank you for registering with :company! To complete your registration and start enjoying our services, please verify your email address by clicking the button below.": "¡Gracias por registrarte en :company! Para completar tu registro y comenzar a disfrutar de nuestros servicios, por favor verifica tu dirección de correo electrónico haciendo clic en el botón a continuación.",
+    "Verify Email Address": "Verificar Dirección de Correo Electrónico",
+    "This verification link will expire in 60 minutes.": "Este enlace de verificación expirará en 60 minutos.",
+    "If you're having trouble clicking the button, copy and paste the URL below into your web browser:": "Si tienes problemas para hacer clic en el botón, copia y pega la URL a continuación en tu navegador web:",
+    "If you did not create an account, no further action is required.": "Si no creaste una cuenta, no se requiere ninguna acción adicional.",
+    "All rights reserved.": "Todos los derechos reservados.",
+    
+    "Welcome to :company!": "¡Bienvenido a :company!",
+    "Welcome!": "¡Bienvenido!",
+    "Your account is now active": "Tu cuenta ahora está activa",
+    "Welcome to :company! We're thrilled to have you join our community. Your email has been successfully verified and your account is now fully active.": "¡Bienvenido a :company! Estamos encantados de que te unas a nuestra comunidad. Tu correo electrónico ha sido verificado exitosamente y tu cuenta ahora está completamente activa.",
+    "Browse Raffles": "Explorar Sorteos",
+    "Explore our exciting raffles and find the perfect opportunity to win big.": "Explora nuestros emocionantes sorteos y encuentra la oportunidad perfecta para ganar en grande.",
+    "Make a Deposit": "Hacer un Depósito",
+    "Add funds to your account securely and start participating in raffles.": "Agrega fondos a tu cuenta de forma segura y comienza a participar en sorteos.",
+    "Purchase Tickets": "Comprar Boletos",
+    "Buy tickets for your favorite raffles and increase your chances of winning.": "Compra boletos para tus sorteos favoritos y aumenta tus posibilidades de ganar.",
+    "Go to Dashboard": "Ir al Panel de Control",
+    "Need help?": "¿Necesitas ayuda?",
+    "Our support team is here to assist you. Contact us at :email": "Nuestro equipo de soporte está aquí para ayudarte. Contáctanos en :email",
+    
+    "Please verify your email address before logging in.": "Por favor verifica tu dirección de correo electrónico antes de iniciar sesión.",
+    "Please verify your email address by clicking on the link we just emailed to you.": "Por favor verifica tu dirección de correo electrónico haciendo clic en el enlace que te acabamos de enviar por correo.",
+    "A new verification link has been sent to the email address you provided during registration.": "Se ha enviado un nuevo enlace de verificación a la dirección de correo electrónico que proporcionaste durante el registro.",
+    "Resend verification email": "Reenviar correo de verificación",
+    "Log out": "Cerrar sesión",
+    
+    "You must be at least 18 years old to register.": "Debes tener al menos 18 años para registrarte.",
+    "You must accept the Terms and Conditions to register.": "Debes aceptar los Términos y Condiciones para registrarte.",
+    "Welcome to :company! Your email has been verified successfully.": "¡Bienvenido a :company! Tu correo electrónico ha sido verificado exitosamente."
 }

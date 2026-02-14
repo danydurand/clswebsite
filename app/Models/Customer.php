@@ -98,6 +98,10 @@ class Customer extends Model implements \OwenIt\Auditing\Contracts\Auditable
         'phone',
         'email',
         'balance',
+        'total_deposit',
+        'total_withdraw',
+        'total_bet',
+        'rollover_pending',
         'user_id',
         'consortium_id',
         'birth_date',
@@ -184,6 +188,38 @@ class Customer extends Model implements \OwenIt\Auditing\Contracts\Auditable
     // Mutators
     //------------
     protected function balance(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => bcmul($value, 100),
+            get: fn($value) => bcdiv($value, 100, 2)
+        );
+    }
+
+    protected function totalDeposit(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => bcmul($value, 100),
+            get: fn($value) => bcdiv($value, 100, 2)
+        );
+    }
+
+    protected function totalWithdraw(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => bcmul($value, 100),
+            get: fn($value) => bcdiv($value, 100, 2)
+        );
+    }
+
+    protected function totalBet(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => bcmul($value, 100),
+            get: fn($value) => bcdiv($value, 100, 2)
+        );
+    }
+
+    protected function rolloverPending(): Attribute
     {
         return Attribute::make(
             set: fn($value) => bcmul($value, 100),
