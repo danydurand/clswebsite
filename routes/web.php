@@ -24,13 +24,17 @@ Route::get('/about', function () {
     return view('about');
 })->name('about');
 
-Route::get('/contact', [App\Http\Controllers\ContactController::class, 'show'])->name('contact');
-Route::post('/contact', [App\Http\Controllers\ContactController::class, 'send'])->name('contact.send');
+Route::get('/contact', [\App\Http\Controllers\ContactController::class, 'show'])->name('contact');
+Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'send'])->name('contact.send');
 
 Route::get('/terms-and-conditions', \App\Livewire\TermsAndConditions::class)
     ->name('terms-and-conditions');
 
-Route::view('dashboard', 'dashboard')
+Route::get('/faqs', \App\Livewire\Faqs::class)
+    ->name('faqs');
+
+
+Route::get('dashboard', \App\Livewire\Dashboard::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
@@ -38,12 +42,30 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('raffles', Raffles::class)->name('raffles');
     Route::get('events', Events::class)->name('events');
+    Route::get('casino', \App\Livewire\Casino::class)->name('casino');
     Route::get('bets', Bets::class)->name('bets');
     Route::get('tickets', Tickets::class)->name('tickets.index');
     Route::get('tickets/create', CreateTicket::class)->name('tickets.create');
     Route::get('tickets/view/{id}', ViewTicket::class)->name('tickets.view');
     Route::get('tickets/edit/{id}', EditTicket::class)->name('tickets.edit');
     Route::get('tickets/how-to-play/{id}', HowToPlay::class)->name('tickets.how-to-play');
+    Route::get('tickets/print/{id}', function ($id) {
+        $ticket = \App\Models\Ticket::with(['ticketDetails.raffle.lottery', 'ticketDetails.game'])->findOrFail($id);
+        return view('tickets.online-ticket-pdf', compact('ticket'));
+    })->name('tickets.print');
+
+    // Deposit routes
+    Route::get('deposits', \App\Livewire\Deposits::class)->name('deposits.index');
+    Route::get('deposits/create', \App\Livewire\CreateDeposit::class)->name('deposits.create');
+    Route::get('deposits/manual', \App\Livewire\CreateManualDeposit::class)->name('deposits.manual');
+    Route::get('deposits/{deposit}', \App\Livewire\ViewDeposit::class)->name('deposits.view');
+    Route::get('deposits/{deposit}/edit', \App\Livewire\EditDeposit::class)->name('deposits.edit');
+
+    // Withdrawal routes
+    Route::get('withdrawals', \App\Livewire\Withdrawals::class)->name('withdrawals');
+    Route::get('withdrawals/create', \App\Livewire\CreateWithdrawal::class)->name('withdrawals.create');
+    Route::get('withdrawals/confirm/{trx}', \App\Livewire\ConfirmWithdrawal::class)->name('withdrawals.confirm');
+    Route::get('withdrawals/{id}', \App\Livewire\ViewWithdrawal::class)->name('withdrawals.view');
 
 });
 
@@ -55,14 +77,14 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/password', 'settings.password')->name('user-password.edit');
     Volt::route('settings/appearance', 'settings.appearance')->name('appearance.edit');
 
-    Volt::route('settings/two-factor', 'settings.two-factor')
-        ->middleware(
-            when(
-                Features::canManageTwoFactorAuthentication()
-                && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
-                ['password.confirm'],
-                [],
-            ),
-        )
-        ->name('two-factor.show');
+    // Volt::route('settings/two-factor', 'settings.two-factor')
+    //     ->middleware(
+    //         when(
+    //             Features::canManageTwoFactorAuthentication()
+    //             && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
+    //             ['password.confirm'],
+    //             [],
+    //         ),
+    //     )
+    //     ->name('two-factor.show');
 });

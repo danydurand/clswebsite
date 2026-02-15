@@ -13,6 +13,9 @@
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
 
+        <!-- Flash Messages for Validation Errors -->
+        <x-flash-message />
+
         <form method="POST" action="{{ route('register.store') }}" class="flex flex-col gap-5">
             @csrf
 
@@ -80,7 +83,7 @@
                     <flux:checkbox name="terms_accepted" value="1" required />
                     <span class="text-sm text-gray-700 dark:text-gray-300">
                         {{ __('I accept the') }}
-                        <a href="{{ route('terms-and-conditions') }}" target="_blank"
+                        <a href="{{ route('terms-and-conditions', ['source' => 'register']) }}" target="_blank"
                             class="text-blue-600 hover:text-purple-600 font-semibold transition-colors">
                             {{ __('Terms and Conditions') }}
                         </a>
@@ -106,4 +109,8 @@
             </flux:link>
         </div>
     </div>
+
+    @push('scripts')
+        <script src="{{ asset('js/register-form-persistence.js') }}"></script>
+    @endpush
 </x-layouts.auth>

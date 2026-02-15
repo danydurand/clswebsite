@@ -21,42 +21,53 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique(User::class),
-            ],
-            'password' => $this->passwordRules(),
-            // 'country_id' => ['required', 'integer', 'exists:countries,id'],
-            'phone' => [
-                'required',
-                'string',
-                'max:20',
-                Rule::unique(Customer::class, 'phone'),
-            ],
-            // 'document_id' => [
-            //     'required',
-            //     'string',
-            //     'max:20',
-            //     Rule::unique(Customer::class, 'document_id'),
-            // ],
-            'birth_date' => [
-                'required',
-                'date',
-                'before:' . now()->subYears(18)->format('Y-m-d'),
-            ],
-            'terms_accepted' => [
-                'required',
-                'accepted',
-            ],
-        ], [
-            'birth_date.before' => 'You must be at least 18 years old to register.',
-            'terms_accepted.accepted' => 'You must accept the Terms and Conditions to register.',
-        ])->validate();
+        try {
+            Validator::make($input, [
+                'name' => ['required', 'string', 'max:255'],
+                'email' => [
+                    'required',
+                    'string',
+                    'email',
+                    'max:255',
+                    Rule::unique(User::class),
+                ],
+                'password' => $this->passwordRules(),
+                // 'country_id' => ['required', 'integer', 'exists:countries,id'],
+                'phone' => [
+                    'required',
+                    'string',
+                    'max:20',
+                    Rule::unique(Customer::class, 'phone'),
+                ],
+                // 'document_id' => [
+                //     'required',
+                //     'string',
+                //     'max:20',
+                //     Rule::unique(Customer::class, 'document_id'),
+                // ],
+                'birth_date' => [
+                    'required',
+                    'date',
+                    'before:' . now()->subYears(18)->format('Y-m-d'),
+                ],
+                'terms_accepted' => [
+                    'required',
+                    'accepted',
+                ],
+            ], [
+                'birth_date.before' => 'You must be at least 18 years old to register.',
+                'terms_accepted.accepted' => 'You must accept the Terms and Conditions to register.',
+            ])->validate();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Clear any existing flash messages to prevent accumulation
+            session()->forget(['flash_error', 'flash_success', 'flash_warning']);
+
+            // Convert validation errors to flash messages
+            $errors = $e->validator->errors()->all();
+            session()->flash('flash_error', $errors);
+
+            throw $e;
+        }
 
         return DB::transaction(function () use ($input) {
             // Create the User record

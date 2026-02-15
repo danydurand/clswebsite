@@ -3,50 +3,62 @@
 namespace App\Models;
 
 use App\Models\Traits\HandleActive;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class TermAndCondition extends Model
+class TermAndCondition extends Model implements \OwenIt\Auditing\Contracts\Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use HasFactory;
     use HandleActive;
 
+    protected $table = 'term_and_conditions_view';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'order',
-        'system_id',
+        'type',
         'is_active',
-        'text',
+        'title',
+        'content',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'order' => 'integer',
+        'is_active' => 'boolean',
     ];
 
 
-    protected function casts(): array
+    //-----------
+    // Finders 
+    //-----------
+    public static function findByTitle(string $title): ?self
     {
-        return [
-            'id' => 'integer',
-            'order' => 'integer',
-            'system_id' => 'integer',
-            'is_active' => 'boolean',
-        ];
-    }
-
-    //---------
-    // Scopes 
-    //---------
-    public function scopeBySystem($query, int $systemId)
-    {
-        return $query->where('system_id', $systemId)
-            ->orderBy('order');
+        return self::where('title', $title)->first();
     }
 
 
-
-    //----------------
-    // Relationships
-    //----------------
-    public function system(): BelongsTo
+    //-----------
+    // Mutators 
+    //-----------
+    protected function setTypeAttribute($value)
     {
-        return $this->belongsTo(System::class);
+        $this->attributes['type'] = length($value, 25);
+    }
+
+    protected function setTitleAttribute($value)
+    {
+        $this->attributes['title'] = length($value, 100);
     }
 
 

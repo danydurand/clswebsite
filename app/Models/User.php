@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Str;
 use App\Models\Traits\JsonData;
 use App\Domain\User\UserTypeEnum;
@@ -100,7 +100,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditable
+class User extends Authenticatable implements MustVerifyEmail, \OwenIt\Auditing\Contracts\Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
@@ -287,5 +287,11 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
     public function referees()
     {
         return $this->hasMany(User::class, 'referrer_id');
+    }
+
+    // The customer associated with this user
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
     }
 }

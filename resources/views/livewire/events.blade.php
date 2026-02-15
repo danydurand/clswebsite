@@ -1,7 +1,9 @@
-<div class="relative mb-6 w-full mx-auto">
-    <flux:heading size="xl" level="1">{{ __('Events') }}</flux:heading>
-    <flux:subheading size="lg" class="mb-6">{{ __('Choose the event you want to bet on') }}</flux:subheading>
-    <flux:separator variant="subtle" />
+<div class="relative w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8 text-center">
+        <flux:heading size="xl" level="1" class="mb-2">{{ __('Events') }}</flux:heading>
+        <flux:separator variant="subtle" />
+    </div>
 
     @session('success')
         <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
@@ -10,86 +12,31 @@
         </div>
     @endsession()
 
-    <flux:modal.trigger name="create-sport-bet">
-        <flux:button class="mt-4 w-5/7" variant="primary" color="blue">Create Sport Bet</flux:button>
-    </flux:modal.trigger>
-
-    <table class="table-auto w-5/7 bg-slate-100 shadow-md rounded-lg mt-5">
-        <thead class="bg-slate-200">
-            <tr class="rounded-lg">
-                <th class="px-4 py-2">Category</th>
-                <th class="px-4 py-2 text-center">Home participant</th>
-                <th class="px-4 py-2 text-center">Away participant</th>
-                <th class="px-4 py-2 text-center">Status</th>
-                <th class="px-4 py-2 text-center">Start Time</th>
-                <th class="px-4 py-2 text-center">Bet Start Time</th>
-                <th class="px-4 py-2 text-center">Bet End Time</th>
-                <th class="px-4 py-2 text-center">Locked?</th>
-                <th class="px-4 py-2 text-center">Checked?</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($events as $event)
-                <tr class="border-t">
-                    <td class="px-4 py-2">{{ $event->category->name }}</td>
-                    <td class="px-4 py-2 text-center">{{ $event->homeParticipant->name }}</td>
-                    <td class="px-4 py-2 text-center">{{ $event->awayParticipant->name }}</td>
-                    <td class="px-4 py-2 text-center">{{ $event->status_code?->description }}</td>
-                    <td class="px-4 py-2 text-center">{{ $event->start_time }}</td>
-                    <td class="px-4 py-2 text-center">{{ $event->bet_start_time }}</td>
-                    <td class="px-4 py-2 text-center">{{ $event->bet_end_time }}</td>
-                    <td class="px-4 py-2 text-center">
-                        @if ($event->is_locked)
-                            <flux:badge icon="lock-closed" color="red">Yes</flux:badge>
-                        @else
-                            <flux:badge icon="lock-open" color="green">No</flux:badge>
-                        @endif
-                    </td>
-                    <td class="px-4 py-2 text-center">
-                        @if ($event->is_checked)
-                            <flux:badge icon="check-circle" color="green">Yes</flux:badge>
-                        @else
-                            <flux:badge icon="x-circle" color="red">No</flux:badge>
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    <div class="w-5/7 mt-4">
-        {{ $events->links() }}
-    </div>
-
-
-    {{-- <flux:modal name="delete-note" class="min-w-[22rem]">
-        <div class="space-y-6">
-            <div>
-                <flux:heading size="lg">Delete Note?</flux:heading>
-
-                <flux:text class="mt-2 text-center">
-                    Are you sure you want to delete the note with the title:
-                    <br><br>
-                    <strong>{{ $event->title }}</strong>
-                    <br><br>
-                    This action cannot be reversed.
+    <!-- Coming Soon Card -->
+    <div class="flex items-center justify-center py-8">
+        <div class="w-full max-w-3xl">
+            <!-- Image Container with Shadow and Rounded Corners -->
+            <div class="relative overflow-hidden rounded-2xl shadow-2xl mb-6">
+                <img src="{{ asset('images/coming-soon/sports.png') }}" alt="{{ __('Sports Betting Coming Soon') }}"
+                    class="w-full object-cover" style="height: 400px;" />
+            </div>
+            <!-- Message Card -->
+            <div
+                class="bg-white dark:bg-zinc-800 rounded-xl shadow-lg p-8 text-center border border-gray-200 dark:border-zinc-700">
+                <div class="mb-4">
+                    <svg class="w-16 h-16 mx-auto text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <flux:heading size="lg" level="2" class="mb-4 text-gray-900 dark:text-white">
+                    {{ __('Sports Betting Coming Soon') }}
+                </flux:heading>
+                <flux:text class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    {{ __("Get ready to bet on your favorite sports! Our sports betting platform will be available soon.") }}
                 </flux:text>
             </div>
-
-            <div class="flex gap-2">
-                <flux:spacer />
-
-                <flux:modal.close>
-                    <flux:button variant="ghost">Cancel</flux:button>
-                </flux:modal.close>
-
-                <flux:button type="submit" variant="danger" wire:click="deleteNote()">Delete Note
-                </flux:button>
-            </div>
         </div>
-    </flux:modal> --}}
-
-    <livewire:create-sport-bet />
-    {{-- <livewire:edit-note /> --}}
-
+    </div>
 </div>

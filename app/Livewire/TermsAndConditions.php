@@ -2,35 +2,23 @@
 
 namespace App\Livewire;
 
-use App\Models\System;
 use App\Models\TermAndCondition;
 use Livewire\Component;
 
 class TermsAndConditions extends Component
 {
-    public $termsBySystem = [];
+    public $terms = [];
+    public $source = null; // Track where the page was called from
 
     public function mount()
     {
-        // Get all active systems
-        $systems = System::where('is_active', true)
-            ->orderBy('name')
+        // Get source from request to avoid Livewire URL syncing
+        $this->source = request('source');
+
+        // Get all active terms ordered by 'order' field
+        $this->terms = TermAndCondition::where('is_active', true)
+            ->orderBy('order')
             ->get();
-
-        // For each system, get its active terms ordered by 'order' field
-        foreach ($systems as $system) {
-            $terms = TermAndCondition::where('system_id', $system->id)
-                ->where('is_active', true)
-                ->orderBy('order')
-                ->get();
-
-            if ($terms->isNotEmpty()) {
-                $this->termsBySystem[] = [
-                    'system' => $system,
-                    'terms' => $terms,
-                ];
-            }
-        }
     }
 
     #[\Livewire\Attributes\Layout('components.layouts.public')]

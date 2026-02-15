@@ -6,6 +6,42 @@
 </head>
 
 <body class="min-h-screen bg-white antialiased dark:bg-linear-to-b dark:from-neutral-950 dark:to-neutral-900">
+    <!-- Language Switcher -->
+    <div class="absolute top-4 right-4 z-50">
+        <div class="relative group">
+            <button
+                class="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129">
+                    </path>
+                </svg>
+                <span class="uppercase text-white font-semibold">{{ app()->getLocale() }}</span>
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div
+                class="absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all border border-gray-200">
+                <a href="{{ route('lang.switch', 'en') }}"
+                    class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 rounded-t-lg transition-colors {{ app()->getLocale() === 'en' ? 'bg-blue-50 font-semibold' : '' }}">
+                    <span class="mr-2">🇺🇸</span>
+                    {{ __('English') }}
+                </a>
+                <a href="{{ route('lang.switch', 'es') }}"
+                    class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-colors {{ app()->getLocale() === 'es' ? 'bg-blue-50 font-semibold' : '' }}">
+                    <span class="mr-2">🇪🇸</span>
+                    {{ __('Spanish') }}
+                </a>
+                <a href="{{ route('lang.switch', 'fr') }}"
+                    class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 rounded-b-lg transition-colors {{ app()->getLocale() === 'fr' ? 'bg-blue-50 font-semibold' : '' }}">
+                    <span class="mr-2">🇫🇷</span>
+                    {{ __('French') }}
+                </a>
+            </div>
+        </div>
+    </div>
+
     <div
         class="relative grid h-dvh flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
         <div class="bg-muted relative hidden h-full flex-col p-10 text-white lg:flex overflow-hidden">
@@ -98,6 +134,8 @@
             </div>
         </div>
     </div>
+
+    @stack('scripts')
     @fluxScripts
 </body>
 
